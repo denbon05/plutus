@@ -5,7 +5,7 @@
       "src": "nuxt.config.js",
       "use": "@nuxtjs/vercel-builder",
       "config": {
-        "serverFiles": ["serverMiddleware/**", "api/**"]
+        "serverFiles": ["serverMiddleware/**", "api/**", "knexfile.js", "db/**"]
       }
     }
   ],

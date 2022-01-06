@@ -7,7 +7,7 @@ build:
 	npm run build
 
 start:
-	npm run dev
+	DEBUG='nuxt:*' npm run dev
 
 start-prod:
 	npm run start

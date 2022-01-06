@@ -46,7 +46,7 @@ jobs:
       - name: Run tests 🧪
         run: npm run test
 
-      - name: "Deploy to Vercel"
+      - name: 'Deploy to Vercel'
         run: |
           prodRun=""
           if [[ ${GITHUB_REF} == "refs/heads/main" ]]; then

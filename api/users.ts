@@ -1,18 +1,18 @@
-// we can get data from any DB
+import knex from '../db/knex.js';
+
 async function getDataFromDB() {
-  return (await require('axios').get(`https://reqres.in/api/users?page=1`))
-    .data;
+  const data = await knex.select().from('users');
+  return { data };
+  // return (await require('axios').get(`https://reqres.in/api/users?page=1`))
+  //   .data;
 }
 
 async function index() {
   const res = await getDataFromDB();
 
-  // some business logic
   let ret = res.data.map((el: any) => {
     return {
-      id: el.id,
-      full_name: el.first_name + ' ' + el.last_name,
-      highlight: el.first_name.charAt(0) === 'J',
+      full_name: `${el.first_name} ${el.last_name}`,
     };
   });
   ret = ret.sort(() => 0.5 - Math.random());

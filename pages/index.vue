@@ -38,6 +38,9 @@ export default {
     async getUserInfo(id) {
       this.userInfo = await this.$api('users', 'show', { id });
     },
+    isOnline() {
+      return `We are ${navigator.onLine ? 'online' : 'offline'}`;
+    },
   },
 };
 </script>
