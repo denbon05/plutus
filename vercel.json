@@ -18,5 +18,9 @@
         "Service-Worker-Allowed": "/"
       }
     }
-  ]
+  ],
+  "github": {
+    "enabled": false,
+    "silent": true
+  }
 }

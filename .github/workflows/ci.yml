@@ -41,7 +41,20 @@ jobs:
         run: npm ci --prefer-offline --no-audit
 
       - name: Run linter 👀
-        run: npm run lint
+        run: npm run lintfix
 
       - name: Run tests 🧪
         run: npm run test
+
+      - name: "Deploy to Vercel"
+        run: |
+          prodRun=""
+          if [[ ${GITHUB_REF} == "refs/heads/main" ]]; then
+            prodRun="--prod"
+          fi
+
+          npx vercel --token ${VERCEL_TOKEN} $prodRun
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
