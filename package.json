@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
-    "build-db": "npx knex migrate:latest",
+    "build-db": "cp knexfile.js dist && knex migrate:latest",
     "build": "nuxt build && npm run build-db",
     "start": "nuxt start",
     "generate": "nuxt generate",
