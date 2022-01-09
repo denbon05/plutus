@@ -3,7 +3,7 @@ export default (context, inject) => {
     try {
       return await context.$axios['$' + (params ? 'post' : 'get')](
         '/api/' + controller + '/' + method,
-        params
+        params,
       );
     } catch (e) {
       console.error(e);

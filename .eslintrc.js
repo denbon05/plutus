@@ -15,5 +15,6 @@ module.exports = {
     'no-console': 'off',
     semi: [2, 'always'],
     'comma-dangle': ['error', 'always-multiline'],
+    'vue/attribute-hyphenation': 'off',
   },
 };

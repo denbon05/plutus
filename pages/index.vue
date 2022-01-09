@@ -24,7 +24,7 @@
 
 <script>
 export default {
-  name: 'RootComponent',
+  name: 'BudgetTable',
   data() {
     return {
       users: [],
@@ -34,12 +34,12 @@ export default {
   async fetch() {
     this.users = await this.$api('users', 'index');
   },
+  // created() {
+  //   async function loadMonthlyData() {}
+  // },
   methods: {
     async getUserInfo(id) {
       this.userInfo = await this.$api('users', 'show', { id });
-    },
-    isOnline() {
-      return `We are ${navigator.onLine ? 'online' : 'offline'}`;
     },
   },
 };

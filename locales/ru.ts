@@ -1,3 +1,7 @@
 export default {
-  welcome: 'Добро пожаловать',
+  date: {
+    month: {
+      select: 'Выберите месяц',
+    },
+  },
 };
