@@ -15,6 +15,9 @@ start-prod:
 fix:
 	npm run lintfix
 
+format:
+	npx prettier --write --list-different .
+
 test:
 	npm test
 

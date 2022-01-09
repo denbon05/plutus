@@ -14,6 +14,6 @@ module.exports = {
   rules: {
     'no-console': 'off',
     semi: [2, 'always'],
-    'comma-dangle': ['error', 'only-multiline'],
+    'comma-dangle': ['error', 'always-multiline'],
   },
 };

@@ -1,35 +1,35 @@
 <template>
   <div>
-    <nav
-      class="navbar header has-shadow is-primary"
+    <b-navbar
       role="navigation"
       aria-label="main navigation"
+      class="navbar-main-color"
+      shadow
     >
-      <div class="navbar-brand">
-        <a class="navbar-item" href="/">
-          <img src="~assets/buefy.png" alt="Buefy" height="28" />
-        </a>
+      <template #brand>
+        <b-navbar-item>
+          <nuxt-link :to="localePath('index')">
+            <img
+              src="~assets/moneybox_icon.svg"
+              alt="Moneybox pig with coin"
+            />
+          </nuxt-link>
+        </b-navbar-item>
+      </template>
 
-        <div class="navbar-burger">
-          <span />
-          <span />
-          <span />
-        </div>
-      </div>
-    </nav>
+      <template #end>
+        <b-navbar-item tag="div">
+          <div class="buttons">
+            <a class="button navbar-btn-second-color">
+              <strong>Sign up</strong>
+            </a>
+            <a class="button is-light"> Log in </a>
+          </div>
+        </b-navbar-item>
+      </template>
+    </b-navbar>
 
     <section class="main-content columns">
-      <aside class="column is-2 section">
-        <p class="menu-label is-hidden-touch">General</p>
-        <ul class="menu-list">
-          <li v-for="(item, key) of items" :key="key">
-            <NuxtLink :to="item.to" exact-active-class="is-active">
-              <b-icon :icon="item.icon" /> {{ item.title }}
-            </NuxtLink>
-          </li>
-        </ul>
-      </aside>
-
       <div class="container column is-10">
         <Nuxt />
       </div>
@@ -39,7 +39,7 @@
 
 <script>
 export default {
-  name: 'DefaultLayout',
+  name: 'MainLayout',
   data() {
     return {
       items: [
@@ -58,3 +58,15 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+@import '~/assets/css/variables.scss';
+
+.navbar-main-color {
+  background: $main-color;
+
+  .navbar-btn-second-color {
+    background: $second-color;
+  }
+}
+</style>
