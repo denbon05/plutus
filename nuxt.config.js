@@ -88,6 +88,9 @@ export default {
         _: 'lodash',
       }),
     ],
+    extend(config) {
+      config.resolve.alias.vue = 'vue/dist/vue.common';
+    },
   },
 
   serverMiddleware: [

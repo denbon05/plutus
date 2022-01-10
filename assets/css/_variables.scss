@@ -1,5 +1,4 @@
 @import '~bulma/sass/utilities/_all';
-@import '~bulma';
 
 // Page colors
 $main-color: #452b8b;
@@ -16,3 +15,8 @@ $color-helper-6: rgb(31, 100, 60);
 $color-info: rgba(76, 135, 184, 0.8);
 $color-warning: rgba(255, 231, 17, 0.8);
 $color-error: rgba(182, 24, 24, 0.8);
+
+$nav-icon-size: 35px;
+
+@import '~bulma';
+@import '~buefy/src/scss/buefy';
