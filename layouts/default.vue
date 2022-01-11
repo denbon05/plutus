@@ -14,7 +14,9 @@
           <b-tooltip
             multilined
             type="is-warning"
-            :label="!isCanStartUser() ? $t('tips.getStart') : $t('tips.title')"
+            :label="
+              !isCanStartUser() ? $t('tips.getStart') : $t('cashFlow.title')
+            "
             position="is-right"
             :always="!isCanStartUser()"
           >
@@ -68,7 +70,7 @@
 </template>
 
 <script>
-import CashFlowModal from '~/components/CashFlowModal.vue';
+import CashFlowModal from '~/components/CashFlow.vue';
 
 const NavEndContent = {
   template: `

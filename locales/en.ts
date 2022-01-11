@@ -13,11 +13,14 @@ export default {
     },
   },
 
-  budget: {
-    scheduler: {
-      title: 'Cashflow',
-      income: 'Income',
-    },
+  cashFlow: {
+    title: 'My Cashflow',
+    income: 'Income',
+    monthly: 'Monthly',
+    costs: 'Costs',
+
+    save: 'Save',
+    close: 'Close',
   },
 
   tips: {
