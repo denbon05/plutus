@@ -85,7 +85,6 @@ export default {
   },
   data() {
     return {
-      isComponentModalActive: false,
       formProps: {
         email: 'evan@you.com',
         password: 'testing',

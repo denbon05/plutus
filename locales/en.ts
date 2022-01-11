@@ -25,8 +25,6 @@ export default {
   },
 
   alt: {
-    pigCoin: 'Moneybox pig with coin',
     luckyCoin: 'Lucky coin',
-    menuIcon: 'Menu icon',
   },
 };

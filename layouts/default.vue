@@ -10,18 +10,19 @@
         id="start"
         class="is-flex is-justify-content-flex-start is-align-items-center"
       >
-        <div id="brand" class="is-flex">
-          <nuxt-link :to="localePath('index')">
-            <img
-              class="nav-icon"
-              src="~assets/moneybox_icon.svg"
-              :alt="$t('alt.pigCoin')"
-            />
-          </nuxt-link>
-        </div>
-
         <div>
-          <b-field id="date-picker">
+          <b-tooltip
+            multilined
+            type="is-warning"
+            :label="!isCanStartUser() ? $t('tips.getStart') : $t('tips.title')"
+            position="is-right"
+            :always="!isCanStartUser()"
+          >
+            <CashFlowModal :isCanStartUser="isCanStartUser" />
+          </b-tooltip>
+        </div>
+        <div id="date-picker" class="w-120">
+          <b-field>
             <b-datepicker
               v-model="currentMonthAndYear"
               type="month"
@@ -33,32 +34,29 @@
             </b-datepicker>
           </b-field>
         </div>
-        <div>
-          <b-tooltip
-            type="is-warning"
-            :label="!isCanStartUser() ? $t('tips.getStart') : $t('tips.title')"
-            position="is-right"
-            :always="!isCanStartUser()"
-          >
-            <CashFlowModal :isCanStartUser="isCanStartUser" />
-          </b-tooltip>
-        </div>
       </section>
 
       <section
         id="end"
         class="is-flex is-justify-content-end is-align-items-center"
       >
-        <div class="buttons is-flex-wrap-nowrap">
-          <a class="button second-color">
-            <strong>{{ $t('user.session.signUp') }}</strong>
-          </a>
-          <a class="button is-light">{{ $t('user.session.signIn') }}</a>
-        </div>
+        <nav-end-content />
       </section>
-      <div class="burger">
-        <img src="~assets/nav_menu_icon.png" :alt="$t('alt.menuIcon')" />
-      </div>
+
+      <b-dropdown
+        id="menu"
+        :mobile-modal="false"
+        position="is-bottom-left"
+        aria-role="list"
+      >
+        <template #trigger>
+          <b-button icon-left="cog" />
+        </template>
+
+        <b-dropdown-item aria-role="listitem" class="menu-item"
+          ><nav-end-content
+        /></b-dropdown-item>
+      </b-dropdown>
     </nav>
 
     <section class="main-content columns">
@@ -72,25 +70,26 @@
 <script>
 import CashFlowModal from '~/components/CashFlowModal.vue';
 
+const NavEndContent = {
+  template: `
+    <div class="buttons is-flex-wrap-nowrap is-justify-content-center">
+      <a class="button second-color">
+        <strong>{{ $t('user.session.signUp') }}</strong>
+      </a>
+      <a class="button is-light">{{ $t('user.session.signIn') }}</a>
+    </div>
+  `,
+};
+
 export default {
   name: 'MainLayout',
   components: {
+    NavEndContent,
     CashFlowModal,
   },
   data() {
     return {
-      items: [
-        {
-          title: 'Home',
-          icon: 'home',
-          to: { name: 'index' },
-        },
-        {
-          title: 'Inspire',
-          icon: 'lightbulb',
-          to: { name: 'inspire' },
-        },
-      ],
+      menuIsVisible: false,
     };
   },
   computed: {
@@ -106,47 +105,35 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '~/assets/css/_variables';
 
+$nav-height: 62px;
+$default-paddings: 5px 20px;
+
 #navbar {
-  min-height: 62px;
+  min-height: $nav-height;
   min-width: 100%;
-  padding: 5px 20px;
+  padding: $default-paddings;
+  position: relative;
 
   #start {
     gap: 20px;
+  }
 
-    #date-picker {
-      width: 120px;
-    }
+  .menu-item {
+    padding: 10px;
   }
 
   @include from($tablet) {
-    .burger {
-      display: none;
+    #menu {
+      display: none !important;
     }
   }
 
   @include until($tablet) {
-    .buttons {
+    #end {
       display: none !important;
-    }
-    .burger {
-      width: calc($nav-icon-size + 10px);
-      &:hover {
-        cursor: pointer;
-        animation: click 1s linear 0.5s;
-      }
-
-      @keyframes click {
-        from {
-          transform: scale(1, 1);
-        }
-        to {
-          transform: scale(1.02, 1.02);
-        }
-      }
     }
   }
 }
@@ -159,5 +146,9 @@ export default {
 }
 .nav-icon {
   width: calc($nav-icon-size + 7px);
+}
+
+.w-120 {
+  width: 120px;
 }
 </style>
