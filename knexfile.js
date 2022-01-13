@@ -9,6 +9,9 @@ const defaultOptions = {
   migrations: {
     directory: path.join(__dirname, 'db', 'migrations'),
   },
+  seeds: {
+    directory: path.join(__dirname, 'db', 'seeds'),
+  },
 };
 
 module.exports = {

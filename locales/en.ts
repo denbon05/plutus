@@ -18,6 +18,7 @@ export default {
     income: 'Income',
     monthly: 'Monthly',
     costs: 'Costs',
+    limits: 'Limits',
 
     save: 'Save',
     close: 'Close',
@@ -28,6 +29,7 @@ export default {
   },
 
   alt: {
-    luckyCoin: 'Lucky coin',
+    luckyCoin: 'Lucky coin icon',
+    moneyboxPig: 'Moneybox pig icon',
   },
 };
