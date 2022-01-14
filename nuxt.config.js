@@ -50,6 +50,20 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/dotenv',
     '@nuxtjs/i18n',
+    [
+      'nuxt-rollbar-module',
+      {
+        serverAccessToken: '1d0346d0b6b747108e6d895e2a3bf334',
+        clientAccessToken: '76a0f9e777904d789089de7099f759d2',
+        config: {
+          captureUncaught: true,
+          captureUnhandledRejections: true,
+          payload: {
+            environment: process.env.NODE_ENV || 'development',
+          },
+        },
+      },
+    ],
   ],
 
   i18n: {

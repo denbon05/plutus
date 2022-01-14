@@ -32,4 +32,11 @@ export default {
     luckyCoin: 'Lucky coin icon',
     moneyboxPig: 'Moneybox pig icon',
   },
+
+  error: {
+    server: 'Server error',
+    action: {
+      retry: 'Do my best',
+    },
+  },
 };

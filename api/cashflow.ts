@@ -1,9 +1,9 @@
 import knex from '../db/knex.js';
 import { getErrorMessage } from '../utils';
-import { IResponse } from '../types/api';
+import { Response } from '../types/api';
 
 async function getCurrencies() {
-  const response: IResponse = { isSuccess: true };
+  const response: Response = { isSuccess: true };
   try {
     response.data = await knex.select().from('currencies');
   } catch (err) {

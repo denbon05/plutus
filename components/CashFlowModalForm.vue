@@ -32,17 +32,17 @@
       <section id="income" class="is-flex is-flex-wrap-nowrap">
         <b-field :label="$t('cashFlow.income')">
           <b-numberinput
-            :disabled="!queryState.isSuccess || queryState.isLoading"
             controls-alignment="right"
             controls-position="compact"
             controls-rounded
             :value="income"
             :exponential="1.5"
+            :disabled="queryState.isLoading"
           ></b-numberinput>
         </b-field>
         <b-field>
           <b-switch
-            :disabled="!queryState.isSuccess || queryState.isLoading"
+            :disabled="true"
             size="is-small"
             :value="isMonthlyIncome"
             type="is-info"
@@ -60,7 +60,8 @@
             size="is-medium"
             type="is-dark"
             close-type="is-warning"
-            :disabled="!queryState.isSuccess || queryState.isLoading"
+            :disabled="queryState.isLoading"
+            @add="capitalize"
           >
           </b-taginput>
         </b-field>
@@ -75,6 +76,7 @@
             class="limit-item"
             :label="costData.name"
             :label-for="costData.name"
+            :disabled="queryState.isLoading"
           >
             <b-numberinput
               :id="costData.name"
@@ -126,8 +128,9 @@ export default {
   },
   watch: {
     queryState() {
-      if (this.queryState.message && !this.queryState.isSuccess)
+      if (this.queryState.message && !this.queryState.isSuccess) {
         this.showToast();
+      }
     },
   },
   mounted() {
@@ -145,6 +148,7 @@ export default {
         this.currencies = data;
         this.currencyData = _.head(data);
       } catch (err) {
+        this.$rollbar.error(err);
         this.queryState = { isSuccess: false, message: err.message };
       } finally {
         this.queryState.isLoading = false;
@@ -153,14 +157,17 @@ export default {
     sendData() {
       console.log('this=>', this);
     },
-    x(param) {
-      console.log('x=>', param);
+    capitalize(value) {
+      this.costs[this.costs.length - 1] = {
+        name: _.capitalize(value),
+        limit: 0,
+      };
     },
-    showToast(type = 'is-danger', message = this.queryState.message) {
+    showToast(message = this.queryState.message, type = 'is-danger') {
       this.$buefy.toast.open({
         duration: 7000,
         message,
-        position: 'is-bottom',
+        position: 'is-top',
         type,
         'pause-on-hover': true,
       });
@@ -216,7 +223,8 @@ export default {
     grid-auto-rows: minmax(100px, auto);
     grid-template-areas:
       'income'
-      'costs';
+      'costs'
+      'limits';
     grid-gap: 10px;
     padding: 15px 25px;
   }
