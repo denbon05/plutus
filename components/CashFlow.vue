@@ -9,12 +9,7 @@
       @click="isComponentModalActive = true"
     />
 
-    <b-modal
-      v-model="isComponentModalActive"
-      has-modal-card
-      full-screen
-      :can-cancel="false"
-    >
+    <b-modal v-model="isComponentModalActive" has-modal-card full-screen :can-cancel="false">
       <cash-flow-modal-form></cash-flow-modal-form>
     </b-modal>
   </section>

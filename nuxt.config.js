@@ -26,10 +26,7 @@ export default {
   css: ['bulma', '~/assets/css/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
-    '~/plugins/api-context.client.js',
-    '~/plugins/api-context.server.js',
-  ],
+  plugins: ['~/plugins/api-context.client.js', '~/plugins/api-context.server.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -50,6 +47,7 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/dotenv',
     '@nuxtjs/i18n',
+    '@nuxtjs/auth-next',
     [
       'nuxt-rollbar-module',
       {

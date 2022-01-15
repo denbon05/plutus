@@ -6,20 +6,18 @@
       role="navigation"
       aria-label="main navigation"
     >
-      <section
-        id="start"
-        class="is-flex is-justify-content-flex-start is-align-items-center"
-      >
+      <section id="start" class="is-flex is-justify-content-flex-start is-align-items-center">
         <div>
           <b-tooltip
+            id="coin-tooltip"
+            :delay="1500"
             multilined
-            type="is-warning"
-            :label="
-              !isCanStartUser() ? $t('tips.getStart') : $t('cashFlow.title')
-            "
+            size="is-small"
+            :label="$t('cashFlow.title')"
+            type="is-light"
             position="is-right"
-            :always="!isCanStartUser()"
           >
+            >
             <CashFlowModal :isCanStartUser="isCanStartUser" />
           </b-tooltip>
         </div>
@@ -38,19 +36,11 @@
         </div>
       </section>
 
-      <section
-        id="end"
-        class="is-flex is-justify-content-end is-align-items-center"
-      >
+      <section id="end" class="is-flex is-justify-content-end is-align-items-center">
         <nav-end-content />
       </section>
 
-      <b-dropdown
-        id="menu"
-        :mobile-modal="false"
-        position="is-bottom-left"
-        aria-role="list"
-      >
+      <b-dropdown id="menu" :mobile-modal="false" position="is-bottom-left" aria-role="list">
         <template #trigger>
           <b-button icon-left="cog" />
         </template>
@@ -110,17 +100,21 @@ export default {
 <style lang="scss">
 @import '~/assets/css/_variables';
 
-$nav-height: 62px;
-$default-paddings: 5px 20px;
+$nav-height: 56px;
+$default-paddings: 0 20px;
 
 #navbar {
-  min-height: $nav-height;
+  height: $nav-height;
   min-width: 100%;
   padding: $default-paddings;
   position: relative;
 
   #start {
     gap: 20px;
+
+    #coin-tooltip {
+      height: 77px;
+    }
   }
 
   .menu-item {

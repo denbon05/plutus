@@ -21,6 +21,7 @@
     "@nuxtjs/pwa": "^3.3.5",
     "body-parser": "^1.19.1",
     "core-js": "^3.19.3",
+    "currency-list": "^1.0.6",
     "knex": "^0.95.15",
     "lodash": "^4.17.21",
     "nuxt": "^2.15.8",

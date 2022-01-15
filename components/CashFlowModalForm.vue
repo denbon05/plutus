@@ -5,21 +5,17 @@
         id="modal-header"
         class="modal-card-title is-flex is-justify-content-flex-start is-align-items-center"
       >
-        <img
-          class="nav-icon"
-          src="~/assets/moneybox_icon.svg"
-          :alt="$t('alt.moneyboxPig')"
-        />
+        <img class="nav-icon" src="~/assets/moneybox_icon.svg" :alt="$t('alt.moneyboxPig')" />
         <span>{{ $t('cashFlow.title') }}</span>
         <b>{{ income }}</b>
         <b-select
           v-model="currencyData"
           :loading="queryState.isLoading"
-          :disabled="!queryState.isSuccess || queryState.isLoading"
+          :disabled="queryState.isLoading"
         >
           <option
             v-for="currencyDataOpt in currencies"
-            :key="currencyDataOpt.currency"
+            :key="currencyDataOpt.name"
             :value="currencyDataOpt"
           >
             {{ currencyDataOpt.symbol }}
@@ -41,12 +37,7 @@
           ></b-numberinput>
         </b-field>
         <b-field>
-          <b-switch
-            :disabled="true"
-            size="is-small"
-            :value="isMonthlyIncome"
-            type="is-info"
-          >
+          <b-switch :disabled="true" size="is-small" :value="isMonthlyIncome" type="is-info">
             {{ $t('cashFlow.monthly') }}
           </b-switch>
         </b-field>
@@ -103,17 +94,19 @@
 </template>
 
 <script>
+import currencyList from 'currency-list';
+
 export default {
   data() {
     return {
       queryState: {
         isSuccess: true,
-        isLoading: true,
+        isLoading: false,
         message: '',
       },
 
       income: 3000,
-      currencies: [],
+      currencies: _.values(currencyList.getAll('en_US')),
       currencyData: {},
       isMonthlyIncome: true,
       costs: [
@@ -134,26 +127,9 @@ export default {
     },
   },
   mounted() {
-    this.getData();
+    this.currencyData = currencyList.get('PLN');
   },
   methods: {
-    async getData() {
-      this.queryState.isLoading = true;
-      try {
-        const { isSuccess, message, data } = await this.$api(
-          'cashflow',
-          'getCurrencies',
-        );
-        this.queryState = { isSuccess, message };
-        this.currencies = data;
-        this.currencyData = _.head(data);
-      } catch (err) {
-        this.$rollbar.error(err);
-        this.queryState = { isSuccess: false, message: err.message };
-      } finally {
-        this.queryState.isLoading = false;
-      }
-    },
     sendData() {
       console.log('this=>', this);
     },

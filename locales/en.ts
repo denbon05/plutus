@@ -24,9 +24,7 @@ export default {
     close: 'Close',
   },
 
-  tips: {
-    getStart: 'Click to start',
-  },
+  tips: {},
 
   alt: {
     luckyCoin: 'Lucky coin icon',
