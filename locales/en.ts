@@ -6,10 +6,36 @@ export default {
   },
 
   user: {
-    session: {
-      signIn: 'Log In',
-      signUp: 'Sign Up',
-      signOut: 'Sign Out',
+    auth: {
+      logIn: {
+        title: 'Log In',
+        ok: 'Sign In',
+      },
+      signUp: {
+        title: 'Sign Up',
+        ok: 'Create account',
+        repeatPassword: 'Repeat password',
+      },
+      signOut: {
+        title: 'Sign Out',
+      },
+      common: {
+        email: 'Email',
+        password: 'Password',
+        cancel: 'Cancel',
+        close: 'Close',
+        placeholder: {
+          password: 'Your password',
+          email: 'Your email',
+        },
+      },
+
+      error: {
+        email: 'Must be in emil format',
+        passwordLength: 'Must be at least 8 characters',
+        repeatPassword: 'Passwords are not equal',
+        required: 'Required field',
+      },
     },
   },
 

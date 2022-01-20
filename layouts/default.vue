@@ -9,7 +9,6 @@
       <section id="start" class="is-flex is-justify-content-flex-start is-align-items-center">
         <div>
           <b-tooltip
-            id="coin-tooltip"
             :delay="1500"
             multilined
             size="is-small"
@@ -17,7 +16,6 @@
             type="is-light"
             position="is-right"
           >
-            >
             <CashFlowModal :isCanStartUser="isCanStartUser" />
           </b-tooltip>
         </div>
@@ -37,7 +35,7 @@
       </section>
 
       <section id="end" class="is-flex is-justify-content-end is-align-items-center">
-        <nav-end-content />
+        <auth />
       </section>
 
       <b-dropdown id="menu" :mobile-modal="false" position="is-bottom-left" aria-role="list">
@@ -45,9 +43,7 @@
           <b-button icon-left="cog" />
         </template>
 
-        <b-dropdown-item aria-role="listitem" class="menu-item"
-          ><nav-end-content
-        /></b-dropdown-item>
+        <b-dropdown-item aria-role="listitem" class="menu-item"><auth /></b-dropdown-item>
       </b-dropdown>
     </nav>
 
@@ -61,22 +57,12 @@
 
 <script>
 import CashFlowModal from '~/components/CashFlow.vue';
-
-const NavEndContent = {
-  template: `
-    <div class="buttons is-flex-wrap-nowrap is-justify-content-center">
-      <a class="button second-color">
-        <strong>{{ $t('user.session.signUp') }}</strong>
-      </a>
-      <a class="button is-light">{{ $t('user.session.signIn') }}</a>
-    </div>
-  `,
-};
+import Auth from '~/components/Auth.vue';
 
 export default {
   name: 'MainLayout',
   components: {
-    NavEndContent,
+    Auth,
     CashFlowModal,
   },
   data() {
@@ -111,10 +97,6 @@ $default-paddings: 0 20px;
 
   #start {
     gap: 20px;
-
-    #coin-tooltip {
-      height: 77px;
-    }
   }
 
   .menu-item {
