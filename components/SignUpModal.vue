@@ -87,8 +87,18 @@ export default {
     passwordsAreEqual() {
       return this.password === this.repeatPassword;
     },
-    signUp() {
+    async signUp() {
       console.log('this=>', this);
+      try {
+        const res = await this.$store.dispatch('auth/register', {
+          username: 'den',
+          password: 'xxx',
+          email: this.email,
+        });
+        console.log('register res =>', res);
+      } catch (err) {
+        console.log('register error:', err);
+      }
     },
   },
 };

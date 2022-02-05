@@ -11,6 +11,7 @@ export const getters = {
 
 export const mutations = {
   setTokens(state, { accessToken, refreshToken = null }) {
+    console.log('setTokens tokens=>', { accessToken, refreshToken });
     state.accessToken = accessToken;
 
     if (refreshToken) {
@@ -29,7 +30,7 @@ export const mutations = {
 
 export const actions = {
   async login({ commit, dispatch }, { username, password }) {
-    const res = await this.$axios.$post('/auth/login', {
+    const res = await this.$api('auth', 'login', {
       username,
       password,
     });
@@ -38,21 +39,24 @@ export const actions = {
     await dispatch('getUser');
   },
   async register({ commit, dispatch }, { username, password }) {
-    const res = await this.$axios.$post('/auth/register', {
+    const res = await this.$api('auth', 'register', {
       username,
       password,
     });
+    console.log('actions.register res=>', res);
 
     commit('setTokens', res);
     await dispatch('getUser');
   },
   async getUser({ commit }) {
-    const res = await this.$axios.$get('/auth/user');
+    const res = await this.$api('auth', 'user');
+    console.log('getUser res=>', res);
 
     commit('setUser', res);
   },
   async refresh({ state, commit }) {
-    const res = await this.$axios.$post('/auth/refresh', {
+    const res = await this.$api('auth', 'refresh', {
+      // ! NOT EXIST
       refreshToken: state.refreshToken,
     });
 

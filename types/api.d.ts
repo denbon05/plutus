@@ -3,3 +3,9 @@ export type Response = {
   isSuccess: boolean;
   data?: any;
 };
+
+export type UserDataProps = {
+  username: string;
+  password: string;
+  email: string;
+};

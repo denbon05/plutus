@@ -22,11 +22,21 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/lucky_coin.png' }],
   },
 
+  vueMeta: {
+    // ? Probably increase netwroking
+    debounceWait: 250,
+  },
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ['bulma', '~/assets/css/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['~/plugins/api-context.client.js', '~/plugins/api-context.server.js'],
+  plugins: [
+    '~/plugins/api-context.client.js',
+    '~/plugins/api-context.server.js',
+    './plugins/vuex-persistedstate',
+    './plugins/axios',
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -47,7 +57,7 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/dotenv',
     '@nuxtjs/i18n',
-    '@nuxtjs/auth-next',
+    'cookie-universal-nuxt',
     [
       'nuxt-rollbar-module',
       {
