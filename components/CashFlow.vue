@@ -10,7 +10,7 @@
     />
 
     <b-modal v-model="isComponentModalActive" has-modal-card full-screen :can-cancel="false">
-      <cash-flow-modal-form></cash-flow-modal-form>
+      <cash-flow-modal-form @showToast="$emit('showToast', $event)"></cash-flow-modal-form>
     </b-modal>
   </section>
 </template>

@@ -47,6 +47,7 @@ export const actions = {
 
     commit('setTokens', res);
     await dispatch('getUser');
+    return res;
   },
   async getUser({ commit }) {
     const res = await this.$api('auth', 'user');

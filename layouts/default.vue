@@ -16,7 +16,7 @@
             type="is-light"
             position="is-right"
           >
-            <CashFlowModal :isCanStartUser="isCanStartUser" />
+            <CashFlowModal :isCanStartUser="isCanStartUser" @showToast="showToast" />
           </b-tooltip>
         </div>
         <div id="date-picker" class="w-120">
@@ -35,7 +35,7 @@
       </section>
 
       <section id="end" class="is-flex is-justify-content-end is-align-items-center">
-        <auth />
+        <auth @showToast="showToast" />
       </section>
 
       <b-dropdown id="menu" :mobile-modal="false" position="is-bottom-left" aria-role="list">
@@ -78,6 +78,15 @@ export default {
   methods: {
     isCanStartUser() {
       return false;
+    },
+    showToast(message = this.queryState.message, type = 'is-danger') {
+      this.$buefy.toast.open({
+        duration: 7000,
+        message,
+        position: 'is-top',
+        type,
+        'pause-on-hover': true,
+      });
     },
   },
 };

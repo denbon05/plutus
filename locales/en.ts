@@ -15,6 +15,7 @@ export default {
         title: 'Sign Up',
         ok: 'Create account',
         repeatPassword: 'Repeat password',
+        username: 'Name',
       },
       signOut: {
         title: 'Sign Out',
@@ -31,10 +32,11 @@ export default {
       },
 
       error: {
-        email: 'Must be in emil format',
-        passwordLength: 'Must be at least 8 characters',
-        repeatPassword: 'Passwords are not equal',
+        format: 'Must be in {name} format',
+        length: '{name} be at least {count} characters',
+        notEqual: '{name} is not equal',
         required: 'Required field',
+        username: 'Name must be at least {count} characters',
       },
     },
   },

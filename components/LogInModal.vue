@@ -14,7 +14,9 @@
               :placeholder="$t('user.auth.common.placeholder.email')"
               required
               :validation-message="
-                isEmailFormat() ? $t('user.auth.error.required') : $t('user.auth.error.email')
+                isEmailFormat()
+                  ? $t('user.auth.error.required')
+                  : $t('user.auth.error.format', { name: $t('user.auth.common.email') })
               "
             >
             </b-input>
@@ -30,7 +32,10 @@
               :validation-message="
                 passwordIsCorrectLength()
                   ? $t('user.auth.error.required')
-                  : $t('user.auth.error.passwordLength')
+                  : $t('user.auth.error.length', {
+                      name: $t('user.auth.common.password'),
+                      count: minPasswordLength,
+                    })
               "
             >
             </b-input>
@@ -56,6 +61,10 @@ export default {
       type: String,
       default: '',
     },
+    minPasswordLength: {
+      type: Number,
+      default: 8,
+    },
   },
   data() {
     return {};
@@ -65,7 +74,7 @@ export default {
       return this.email.match(/.+@.+\..+/i);
     },
     passwordIsCorrectLength() {
-      return this.password.length <= 8;
+      return this.password.length <= this.minPasswordLength;
     },
   },
 };

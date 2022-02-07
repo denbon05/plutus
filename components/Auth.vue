@@ -14,6 +14,11 @@ import SignUpModal from '~/components/SignUpModal.vue';
 import LogInModal from '~/components/LogInModal.vue';
 
 export default {
+  data() {
+    return {
+      minPasswordLength: 8,
+    };
+  },
   methods: {
     imageModal() {
       const h = this.$createElement;
@@ -27,19 +32,23 @@ export default {
     openSignUpModal() {
       this.$buefy.modal.open({
         parent: this,
+        props: {
+          minPasswordLength: this.minPasswordLength,
+        },
         component: SignUpModal,
         hasModalCard: true,
-        customClass: 'custom-class custom-class-2',
         trapFocus: true,
-        events: {},
+        events: { showToast: (args = {}) => this.$emit('showToast', args) },
       });
     },
     openLogInModal() {
       this.$buefy.modal.open({
         parent: this,
+        props: {
+          minPasswordLength: this.minPasswordLength,
+        },
         component: LogInModal,
         hasModalCard: true,
-        customClass: 'custom-class custom-class-2',
         trapFocus: true,
       });
     },

@@ -122,7 +122,7 @@ export default {
   watch: {
     queryState() {
       if (this.queryState.message && !this.queryState.isSuccess) {
-        this.showToast();
+        this.$emit('showToast', this.queryState.message);
       }
     },
   },
@@ -138,15 +138,6 @@ export default {
         name: _.capitalize(value),
         limit: 0,
       };
-    },
-    showToast(message = this.queryState.message, type = 'is-danger') {
-      this.$buefy.toast.open({
-        duration: 7000,
-        message,
-        position: 'is-top',
-        type,
-        'pause-on-hover': true,
-      });
     },
   },
 };

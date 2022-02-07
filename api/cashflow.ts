@@ -1,6 +1,6 @@
 import knex from '../db/knex.js';
 import { getErrorMessage } from '../utils';
-import { Response } from '../types/api';
+import { Response } from '../types';
 
 async function getCurrencies() {
   const response: Response = { isSuccess: true };
