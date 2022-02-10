@@ -3,7 +3,7 @@
     <form>
       <div class="modal-card" style="width: auto">
         <header class="modal-card-head">
-          <p class="modal-card-title">{{ $t('user.auth.signUp.title') }}</p>
+          <p class="modal-card-title" @click="check">{{ $t('user.auth.signUp.title') }}</p>
           <button type="button" class="delete" @click="$emit('close')" />
         </header>
         <section class="modal-card-body">
@@ -39,8 +39,8 @@
               </span>
             </template>
             <b-input
-              type="email"
               :value="email"
+              type="email"
               :placeholder="$t('user.auth.common.placeholder.email')"
               @input="(value) => typing('email', value)"
             >
@@ -127,6 +127,18 @@ export default {
       repeatPassword: '',
     };
   },
+  watch: {
+    queryState: {
+      handler() {
+        const { isLoading, message, isSuccess } = this.queryState;
+        if (!isLoading && message) {
+          this.$emit('showToast', { message, type: isSuccess ? 'is-success' : 'is-danger' });
+        }
+      },
+      deep: true,
+      immediate: false,
+    },
+  },
   mounted() {
     this.$nextTick(() => {
       this.$refs.username.focus();
@@ -153,6 +165,9 @@ export default {
         this.isCorrectUsername()
       );
     },
+    check() {
+      console.log('this.state=>', this.$store.state);
+    },
 
     typing(inputname, value) {
       this.$set(this, inputname, value);
@@ -160,18 +175,27 @@ export default {
 
     async signUp() {
       console.log('this=>', this);
-      console.log('this.isCorrectUsername()=>', this.isCorrectUsername());
       if (this.canSendData()) {
+        this.queryState.isLoading = true;
         try {
-          const res = await this.$store.dispatch('auth/register', {
-            username: 'den',
-            password: 'xxx',
+          const {
+            isSuccess,
+            message = this.$t('user.auth.message.success', {
+              name: this.$t('user.auth.signUp.title'),
+            }),
+          } = await this.$store.dispatch('auth/register', {
+            username: this.username,
+            password: this.password,
             email: this.email,
           });
-          console.log('register res =>', res);
-          if (!res.isSuccess) this.$emit('showToast', res.message);
+          console.log('register res =>', { isSuccess, message });
+          this.queryState = {
+            isSuccess,
+            message,
+            isLoading: false,
+          };
         } catch (err) {
-          this.$emit('showToast', err.message);
+          this.queryState = { isSuccess: false, message: err.message, isLoading: false };
         }
       } else {
         this.$set(this.queryState, 'isSuccess', false);

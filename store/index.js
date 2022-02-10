@@ -3,6 +3,10 @@ export const actions = {
     const cookie = this.$cookies.get('auth');
     if (cookie) {
       commit('auth/setTokens', cookie.auth);
+      commit('auth/setUser', {
+        username: localStorage.getItem('username'),
+        id: localStorage.getItem('userId'),
+      });
     }
 
     const { accessToken, refreshToken } = state.auth;

@@ -38,6 +38,10 @@ export default {
         required: 'Required field',
         username: 'Name must be at least {count} characters',
       },
+
+      message: {
+        success: '{name} successed',
+      },
     },
   },
 

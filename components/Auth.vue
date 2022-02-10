@@ -50,6 +50,12 @@ export default {
         component: LogInModal,
         hasModalCard: true,
         trapFocus: true,
+        events: {
+          showToast: (args = {}) => {
+            console.log('auth showTOasts', args);
+            this.$emit('showToast', args);
+          },
+        },
       });
     },
   },

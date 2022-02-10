@@ -1,6 +1,11 @@
+import models from '../models';
+
+const { Guest, User } = models;
+
 export const state = () => ({
   accessToken: null,
   refreshToken: null,
+  user: new Guest(),
 });
 
 export const getters = {
@@ -18,8 +23,9 @@ export const mutations = {
       state.refreshToken = refreshToken;
     }
   },
-  setUser(state, user) {
-    state.user = user;
+  setUser(state, userData) {
+    state.user = new User(userData);
+    state.user.setDataToLocalStorage();
   },
   logout(state) {
     state.accessToken = null;
@@ -36,24 +42,25 @@ export const actions = {
     });
 
     commit('setTokens', res);
-    await dispatch('getUser');
+    await dispatch('fetchUserData');
   },
-  async register({ commit, dispatch }, { username, password }) {
+  async register({ commit, dispatch }, { username, password, email }) {
     const res = await this.$api('auth', 'register', {
       username,
       password,
+      email,
     });
     console.log('actions.register res=>', res);
 
     commit('setTokens', res);
-    await dispatch('getUser');
+    await dispatch('fetchUserData', res);
     return res;
   },
-  async getUser({ commit }) {
-    const res = await this.$api('auth', 'user');
-    console.log('getUser res=>', res);
+  async fetchUserData({ commit }, { id }) {
+    const { data } = await this.$api('auth', 'fetchUserData', { id });
+    console.log('fetchUserData res.data=>', data);
 
-    commit('setUser', res);
+    commit('setUser', data);
   },
   async refresh({ state, commit }) {
     const res = await this.$api('auth', 'refresh', {
