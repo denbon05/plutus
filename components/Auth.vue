@@ -1,10 +1,18 @@
 <template>
   <section>
     <div class="buttons is-flex-wrap-nowrap is-justify-content-center">
-      <a class="button second-color" @click="openSignUpModal">
-        <strong>{{ $t('user.auth.signUp.title') }}</strong>
-      </a>
-      <a class="button is-light" @click="openLogInModal">{{ $t('user.auth.logIn.title') }}</a>
+      <template v-if="userIsGuest">
+        <a class="button second-color" @click="openSignUpModal">
+          <strong>{{ $t('user.auth.signUp.title') }}</strong>
+        </a>
+        <a class="button is-light" @click="openLogInModal">{{ $t('user.auth.logIn.title') }}</a>
+      </template>
+
+      <template v-else>
+        <b-button icon-right="exit-to-app" @click="logOut">
+          {{ userName }}
+        </b-button>
+      </template>
     </div>
   </section>
 </template>
@@ -19,7 +27,21 @@ export default {
       minPasswordLength: 8,
     };
   },
+  computed: {
+    userName() {
+      return this.$store.state.auth.user.getName();
+    },
+    userIsGuest() {
+      return this.$store.state.auth.user.isGuest();
+    },
+  },
+  mounted() {
+    console.log('!!!!=>', this.userIsGuest, this.userName);
+  },
   methods: {
+    logOut() {
+      this.$store.commit('auth/logOut');
+    },
     imageModal() {
       const h = this.$createElement;
       const vnode = h('p', { class: 'image is-4by3' }, [

@@ -16,7 +16,6 @@ export const getters = {
 
 export const mutations = {
   setTokens(state, { accessToken, refreshToken = null }) {
-    console.log('setTokens tokens=>', { accessToken, refreshToken });
     state.accessToken = accessToken;
 
     if (refreshToken) {
@@ -24,25 +23,31 @@ export const mutations = {
     }
   },
   setUser(state, userData) {
-    state.user = new User(userData);
-    state.user.setDataToLocalStorage();
+    if (userData) state.user = new User(userData);
+    else state.user = new Guest();
   },
-  logout(state) {
+  logOut(state) {
+    state.user.logOut();
     state.accessToken = null;
     state.refreshToken = null;
-    state.user = null;
+    state.user = new Guest();
   },
 };
 
 export const actions = {
-  async login({ commit, dispatch }, { username, password }) {
+  initUser({ commit }) {
+    const userData = JSON.parse(localStorage.getItem('user'));
+    commit('setUser', userData);
+  },
+  async logIn({ commit, dispatch }, { email, password }) {
     const res = await this.$api('auth', 'login', {
-      username,
+      email,
       password,
     });
 
     commit('setTokens', res);
     await dispatch('fetchUserData');
+    return res;
   },
   async register({ commit, dispatch }, { username, password, email }) {
     const res = await this.$api('auth', 'register', {
@@ -50,17 +55,17 @@ export const actions = {
       password,
       email,
     });
-    console.log('actions.register res=>', res);
 
     commit('setTokens', res);
-    await dispatch('fetchUserData', res);
+    await dispatch('fetchUserData');
     return res;
   },
-  async fetchUserData({ commit }, { id }) {
-    const { data } = await this.$api('auth', 'fetchUserData', { id });
-    console.log('fetchUserData res.data=>', data);
+  async fetchUserData({ commit }) {
+    const {
+      data: { username: name },
+    } = await this.$api('auth', 'fetchUserData');
 
-    commit('setUser', data);
+    commit('setUser', { name });
   },
   async refresh({ state, commit }) {
     const res = await this.$api('auth', 'refresh', {

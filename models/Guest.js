@@ -6,8 +6,4 @@ export default class Guest {
   getName() {
     return null;
   }
-
-  setDataToLocalStorage() {}
-
-  resetDataFromLocalStorage() {}
 }
