@@ -21,7 +21,7 @@
     "@nuxtjs/pwa": "^3.3.5",
     "body-parser": "^1.19.1",
     "cookie-universal-nuxt": "^2.1.5",
-    "core-js": "^3.19.3",
+    "core-js": "^3.21.0",
     "currency-list": "^1.0.6",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.15",
