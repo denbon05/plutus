@@ -7,43 +7,52 @@
           <button type="button" class="delete" @click="$emit('close')" />
         </header>
         <section class="modal-card-body">
-          <b-field :label="$t('user.auth.common.email')">
+          <b-field :type="!queryState.isSuccess && !isEmailFormat() ? 'is-danger' : null">
+            <template #label>
+              <span v-if="!isEmailFormat() && !queryState.isSuccess" class="has-text-danger-dark">
+                {{ $t('user.auth.error.format', { name: $t('user.auth.common.email') }) }}
+              </span>
+              <span v-else>
+                {{ $t('user.auth.common.email') }}
+              </span>
+            </template>
             <b-input
-              type="email"
+              ref="email"
               :value="email"
+              type="email"
               :placeholder="$t('user.auth.common.placeholder.email')"
-              required
-              :validation-message="
-                isEmailFormat()
-                  ? $t('user.auth.error.required')
-                  : $t('user.auth.error.format', { name: $t('user.auth.common.email') })
-              "
+              @input="(value) => typing('email', value)"
             >
             </b-input>
           </b-field>
 
-          <b-field :label="$t('user.auth.common.password')">
+          <b-field :type="!queryState.isSuccess && !passwordIsAllowedLength() ? 'is-danger' : null">
+            <template #label>
+              <span v-if="!isEmailFormat() && !queryState.isSuccess" class="has-text-danger-dark">
+                {{
+                  $t('user.auth.error.length', {
+                    name: $t('user.auth.common.password'),
+                    count: minPasswordLength,
+                  })
+                }}
+              </span>
+              <span v-else>
+                {{ $t('user.auth.common.password') }}
+              </span>
+            </template>
             <b-input
               type="password"
               :value="password"
               password-reveal
               :placeholder="$t('user.auth.common.placeholder.password')"
-              required
-              :validation-message="
-                passwordIsCorrectLength()
-                  ? $t('user.auth.error.required')
-                  : $t('user.auth.error.length', {
-                      name: $t('user.auth.common.password'),
-                      count: minPasswordLength,
-                    })
-              "
+              @input="(value) => typing('password', value)"
             >
             </b-input>
           </b-field>
         </section>
         <footer class="modal-card-foot">
           <b-button :label="$t('user.auth.common.cancel')" @click="$emit('close')" />
-          <b-button :label="$t('user.auth.logIn.ok')" type="is-primary" />
+          <b-button :label="$t('user.auth.logIn.ok')" type="is-primary" @click="logIn" />
         </footer>
       </div>
     </form>
@@ -53,28 +62,80 @@
 <script>
 export default {
   props: {
-    email: {
-      type: String,
-      default: '',
-    },
-    password: {
-      type: String,
-      default: '',
-    },
     minPasswordLength: {
       type: Number,
       default: 8,
     },
   },
   data() {
-    return {};
+    return {
+      queryState: {
+        isSuccess: true,
+        isLoading: false,
+        message: '',
+      },
+
+      email: '',
+      password: '',
+    };
+  },
+  watch: {
+    queryState: {
+      handler() {
+        const { isLoading, message, isSuccess } = this.queryState;
+        if (!isLoading && message) {
+          this.$emit('showToast', { message, type: isSuccess ? 'is-success' : 'is-danger' });
+        }
+      },
+      deep: true,
+      immediate: false,
+    },
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.$refs.email.focus();
+    });
   },
   methods: {
+    async logIn() {
+      console.log('this=>', this);
+      if (this.canSendData()) {
+        this.queryState.isLoading = true;
+        try {
+          const {
+            isSuccess,
+            message = this.$t('user.auth.message.success', {
+              name: this.$t('user.auth.logIn.title'),
+            }),
+          } = await this.$store.dispatch('auth/logIn', {
+            password: this.password,
+            email: this.email,
+          });
+          console.log('logIn res =>', { isSuccess, message });
+          this.queryState = {
+            isSuccess,
+            message,
+            isLoading: false,
+          };
+          this.$emit('close');
+        } catch (err) {
+          this.queryState = { isSuccess: false, message: err.message, isLoading: false };
+        }
+      } else {
+        this.$set(this.queryState, 'isSuccess', false);
+      }
+    },
     isEmailFormat() {
       return this.email.match(/.+@.+\..+/i);
     },
-    passwordIsCorrectLength() {
-      return this.password.length <= this.minPasswordLength;
+    passwordIsAllowedLength() {
+      return this.password.length >= 8;
+    },
+    canSendData() {
+      return this.isEmailFormat() && this.passwordIsAllowedLength();
+    },
+    typing(inputname, value) {
+      this.$set(this, inputname, value);
     },
   },
 };

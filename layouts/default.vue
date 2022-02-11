@@ -75,9 +75,12 @@ export default {
       return new Date();
     },
   },
+  beforeMount() {
+    this.$store.dispatch('auth/initUser');
+  },
   methods: {
     isCanStartUser() {
-      return false;
+      return !this.$store.state.auth.user.isGuest();
     },
     showToast({ message = this.queryState.message, type = 'is-danger' }) {
       this.$buefy.toast.open({

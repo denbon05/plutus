@@ -1,7 +1,10 @@
 export default class User {
-  constructor({ username, id }) {
-    this.username = username;
-    this.id = id;
+  #name;
+
+  constructor({ name }) {
+    this.name = name;
+
+    localStorage.setItem('user', JSON.stringify({ name }));
   }
 
   isGuest() {
@@ -9,15 +12,10 @@ export default class User {
   }
 
   getName() {
-    return this.name;
+    return this.name ?? JSON.parse(localStorage.getItem('user')).name;
   }
 
-  setDataToLocalStorage() {
-    localStorage.setItem('username', this.username);
-    localStorage.setItem('userId', this.id);
-  }
-
-  resetDataFromLocalStorage() {
+  logOut() {
     localStorage.clear();
   }
 }

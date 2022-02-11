@@ -3,7 +3,7 @@
     <form>
       <div class="modal-card" style="width: auto">
         <header class="modal-card-head">
-          <p class="modal-card-title" @click="check">{{ $t('user.auth.signUp.title') }}</p>
+          <p class="modal-card-title">{{ $t('user.auth.signUp.title') }}</p>
           <button type="button" class="delete" @click="$emit('close')" />
         </header>
         <section class="modal-card-body">
@@ -98,7 +98,12 @@
         </section>
         <footer class="modal-card-foot">
           <b-button :label="$t('user.auth.common.cancel')" @click="$emit('close')" />
-          <b-button :label="$t('user.auth.signUp.ok')" type="is-primary" @click="signUp" />
+          <b-button
+            :disabled="queryState.isLoading"
+            :label="$t('user.auth.signUp.ok')"
+            type="is-primary"
+            @click="signUp"
+          />
         </footer>
       </div>
     </form>
@@ -165,9 +170,6 @@ export default {
         this.isCorrectUsername()
       );
     },
-    check() {
-      console.log('this.state=>', this.$store.state);
-    },
 
     typing(inputname, value) {
       this.$set(this, inputname, value);
@@ -194,6 +196,7 @@ export default {
             message,
             isLoading: false,
           };
+          this.$emit('close');
         } catch (err) {
           this.queryState = { isSuccess: false, message: err.message, isLoading: false };
         }
