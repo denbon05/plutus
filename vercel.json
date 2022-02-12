@@ -1,0 +1,34 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "nuxt.config.js",
+      "use": "@nuxtjs/vercel-builder",
+      "config": {
+        "serverFiles": [
+          "serverMiddleware/**",
+          "api/**",
+          "knexfile.js",
+          "db/**",
+          "locales/**",
+          "utils/**",
+          "models/**"
+        ]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/sw.js",
+      "continue": true,
+      "headers": {
+        "Cache-Control": "public, max-age=0, must-revalidate",
+        "Service-Worker-Allowed": "/"
+      }
+    }
+  ],
+  "github": {
+    "enabled": false,
+    "silent": true
+  }
+}

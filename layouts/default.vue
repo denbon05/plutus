@@ -22,7 +22,7 @@
         <div id="date-picker" class="w-120">
           <b-field>
             <b-datepicker
-              v-model="currentMonthAndYear"
+              v-model="monthAndYear"
               type="month"
               :placeholder="$t('date.month.select')"
               icon="calendar-today"
@@ -68,12 +68,9 @@ export default {
   data() {
     return {
       menuIsVisible: false,
+
+      monthAndYear: new Date(),
     };
-  },
-  computed: {
-    currentMonthAndYear() {
-      return new Date();
-    },
   },
   beforeMount() {
     this.$store.dispatch('auth/initUser');
@@ -136,7 +133,7 @@ $default-paddings: 0 20px;
   background: $second-color;
 }
 .nav-icon {
-  width: calc($nav-icon-size + 7px);
+  width: calc($nav-icon-size + 27px);
 }
 
 .w-120 {

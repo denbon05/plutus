@@ -1,5 +1,5 @@
 import userData from './fixtures/user';
-import { prepareDB, resetDb } from './helpers';
+import { prepareDB, rollBackDb } from './helpers';
 import { register, login } from '@/api/auth';
 
 describe('auth proccess', () => {
@@ -15,7 +15,7 @@ describe('auth proccess', () => {
   });
 
   afterAll(async () => {
-    await resetDb();
+    await rollBackDb();
   });
 
   test('signIn', async () => {

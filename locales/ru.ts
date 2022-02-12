@@ -46,21 +46,21 @@ export default {
   },
 
   cashFlow: {
-    title: 'My Cashflow',
-    income: 'Income',
-    monthly: 'Monthly',
-    costs: 'Costs',
-    limits: 'Limits',
-
-    save: 'Save',
-    close: 'Close',
-  },
-
-  tips: {},
-
-  alt: {
-    luckyCoin: 'Lucky coin icon',
-    moneyboxPig: 'Moneybox pig icon',
+    title: 'Мой денежный поток',
+    income: 'Доход',
+    monthly: 'Ежемесячно',
+    costs: 'Расходы',
+    limits: 'Пределы',
+    save: 'Сохранять',
+    close: 'Закрывать',
+    defaultValue: {
+      mortgage: 'Ипотека',
+      creditCard: 'Кредитная карта',
+      food: 'Еда',
+      internet: 'Интернет',
+      publicService: 'Гос. служба',
+      fuel: 'Топливо',
+    },
   },
 
   error: {

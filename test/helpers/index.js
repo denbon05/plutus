@@ -5,6 +5,6 @@ export const prepareDB = async () => {
   return knexInstance;
 };
 
-export const resetDb = async () => {
+export const rollBackDb = async () => {
   await knex.migrate.rollback();
 };

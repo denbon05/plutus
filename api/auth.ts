@@ -28,10 +28,11 @@ async function register({ name, password, email }: UserDataProps): Promise<IAuth
   }
 }
 
-function fetchUserData({ token }: { token: string }): IAuthResponse {
+async function fetchUserData({ token }: { token: string }): Promise<IAuthResponse> {
   try {
-    const decoded = decode(token);
-    return { data: decoded, isSuccess: true };
+    const decoded = decode(token) as any;
+    const [userData] = await knex('users').select('name').where('id', decoded.id);
+    return { data: userData, isSuccess: true };
   } catch (err) {
     return { isSuccess: false, message: getErrorMessage(err) };
   }

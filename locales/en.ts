@@ -54,6 +54,15 @@ export default {
 
     save: 'Save',
     close: 'Close',
+
+    defaultValue: {
+      mortgage: 'Mortgage',
+      creditCard: 'Credit card',
+      food: 'Food',
+      internet: 'Internet',
+      publicService: 'Public service',
+      fuel: 'Fuel',
+    },
   },
 
   tips: {},

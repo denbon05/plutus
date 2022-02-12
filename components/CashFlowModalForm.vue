@@ -1,12 +1,16 @@
 <template>
   <div class="modal-card" style="width: auto">
-    <header class="modal-card-head">
+    <header id="modal-header-container" class="modal-card-head">
       <div
         id="modal-header"
         class="modal-card-title is-flex is-justify-content-flex-start is-align-items-center"
       >
-        <img class="nav-icon" src="~/assets/moneybox_icon.svg" :alt="$t('alt.moneyboxPig')" />
-        <span>{{ $t('cashFlow.title') }}</span>
+        <img
+          class="nav-icon"
+          src="~/assets/personal-scrooge-mcduck-scrooge-mcduck-hat-png-transparent.png"
+          :alt="$t('alt.moneyboxPig')"
+        />
+        <span id="cashflowModalTitle">{{ $t('cashFlow.title') }}</span>
         <b>{{ income }}</b>
         <b-select
           v-model="currencyData"
@@ -21,11 +25,26 @@
             {{ currencyDataOpt.symbol }}
           </option>
         </b-select>
+        <template v-if="!isMonthlyIncome">
+          <div id="date-picker" class="w-120">
+            <b-field>
+              <b-datepicker
+                v-model="monthAndYear"
+                type="month"
+                :placeholder="$t('date.month.select')"
+                icon="calendar-today"
+                trap-focus
+                :mobile-native="false"
+              >
+              </b-datepicker>
+            </b-field>
+          </div>
+        </template>
       </div>
       <button type="button" class="delete" @click="$parent.close()" />
     </header>
     <section id="grid-container" class="modal-card-body">
-      <section id="income" class="is-flex is-flex-wrap-nowrap">
+      <section id="income" class="is-flex">
         <b-field :label="$t('cashFlow.income')">
           <b-numberinput
             controls-alignment="right"
@@ -37,22 +56,21 @@
           ></b-numberinput>
         </b-field>
         <b-field>
-          <b-switch :disabled="true" size="is-small" :value="isMonthlyIncome" type="is-info">
+          <b-switch disabled size="is-small" :value="isMonthlyIncome" type="is-info">
             {{ $t('cashFlow.monthly') }}
           </b-switch>
         </b-field>
       </section>
 
-      <section id="costs">
+      <section id="costs" :style="{ 'max-width': `${screen.width - 30}px` }">
         <b-field :label="$t('cashFlow.costs')">
           <b-taginput
             v-model="costs"
             field="name"
             size="is-medium"
-            type="is-dark"
             close-type="is-warning"
             :disabled="queryState.isLoading"
-            @add="capitalize"
+            @add="formatCosts"
           >
           </b-taginput>
         </b-field>
@@ -60,9 +78,9 @@
 
       <section id="limits">
         <h1 class="title">{{ $t('cashFlow.limits') }}</h1>
-        <b-field group-multiline>
+        <section class="is-flex is-flex-wrap-wrap">
           <b-field
-            v-for="costData in costs"
+            v-for="(costData, costIdx) in costs"
             :key="costData.name"
             class="limit-item"
             :label="costData.name"
@@ -71,14 +89,18 @@
           >
             <b-numberinput
               :id="costData.name"
+              :ref="`cost_${costIdx}`"
+              :data-idx="costIdx"
               controls-alignment="right"
               controls-position="compact"
               class="mx-2"
               :value="costData.limit"
               :exponential="1.5"
+              min="0"
+              @blur="countCashFlow"
             ></b-numberinput>
           </b-field>
-        </b-field>
+        </section>
       </section>
     </section>
     <footer class="modal-card-foot">
@@ -99,6 +121,7 @@ import currencyList from 'currency-list';
 export default {
   data() {
     return {
+      screen: { width: window.innerWidth, height: window.innerHeight },
       queryState: {
         isSuccess: true,
         isLoading: false,
@@ -108,14 +131,15 @@ export default {
       income: 3000,
       currencies: _.values(currencyList.getAll('en_US')),
       currencyData: {},
+      monthAndYear: new Date(),
       isMonthlyIncome: true,
       costs: [
-        { name: 'Mortgage', limit: 0 },
-        { name: 'Credit card', limit: 0 },
-        { name: 'Food', limit: 0 },
-        { name: 'Internet', limit: 0 },
-        { name: 'Public service', limit: 0 },
-        { name: 'Fuel', limit: 0 },
+        { name: this.$t('cashFlow.defaultValue.mortgage'), limit: 0 },
+        { name: this.$t('cashFlow.defaultValue.creditCard'), limit: 0 },
+        { name: this.$t('cashFlow.defaultValue.food'), limit: 0 },
+        { name: this.$t('cashFlow.defaultValue.internet'), limit: 0 },
+        { name: this.$t('cashFlow.defaultValue.publicService'), limit: 0 },
+        { name: this.$t('cashFlow.defaultValue.fuel'), limit: 0 },
       ],
     };
   },
@@ -128,16 +152,43 @@ export default {
   },
   mounted() {
     this.currencyData = currencyList.get('PLN');
+    window.addEventListener('resize', this.onResize);
+    this.costs.forEach(this.addEventListenerFocusNextCostInput);
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.onResize);
   },
   methods: {
+    countCashFlow(e) {
+      console.log('countCashFlow e=>', e);
+    },
+    addEventListenerFocusNextCostInput({ name }) {
+      document.getElementById(name).addEventListener('keypress', (e) => {
+        if (e.code === 'Enter') {
+          this.pressEnterCostInput(e.target.dataset.idx);
+        }
+      });
+    },
+    pressEnterCostInput(costIdx) {
+      if (this.costs.length - 1 > costIdx) {
+        _.head(this.$refs[`cost_${Number(costIdx) + 1}`]).focus();
+      }
+    },
+    onResize() {
+      this.screen = { width: window.innerWidth, height: window.innerHeight };
+    },
     sendData() {
       console.log('this=>', this);
     },
-    capitalize(value) {
-      this.costs[this.costs.length - 1] = {
-        name: _.capitalize(value),
+    formatCosts(value) {
+      const costIdx = this.costs.length - 1;
+      const capitalizedName = _.capitalize(value);
+      this.costs[costIdx] = {
+        name: capitalizedName,
         limit: 0,
       };
+      this.costs = _.uniqBy(this.costs, 'name');
+      this.addEventListenerFocusNextCostInput({ name: capitalizedName });
     },
   },
 };
@@ -145,6 +196,13 @@ export default {
 
 <style lang="scss">
 @import '~/assets/css/_variables';
+
+#modal-header-container {
+  padding: 7px 10px;
+}
+#cashflowModalTitle {
+  display: none;
+}
 
 #income {
   grid-area: income;
@@ -173,6 +231,10 @@ export default {
 }
 
 @include from($tablet) {
+  #cashflowModalTitle {
+    display: block;
+  }
+
   #grid-container {
     grid-template-columns: repeat(3, 1fr);
     grid-auto-rows: minmax(100px, auto);
@@ -193,7 +255,7 @@ export default {
       'costs'
       'limits';
     grid-gap: 10px;
-    padding: 15px 25px;
+    padding: 5px 10px;
   }
 }
 </style>
