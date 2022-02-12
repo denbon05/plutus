@@ -7,6 +7,7 @@
     "pre-build": "rm -fr ./dist ./.nuxt",
     "build-db": "knex migrate:latest",
     "build": "npm run pre-build & npm run generate",
+    "build-all": "npm run build & npm run build-db",
     "start": "nuxt start",
     "generate": "npx nuxt generate",
     "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore .",

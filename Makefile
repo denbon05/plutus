@@ -1,10 +1,13 @@
 install: install-deps build
 
 install-deps:
-	npm install
+	npm ci
 
 build:
 	npm run build
+
+build-db-prod:
+	NODE_ENV='production' npm run build-db
 
 start:
 	DEBUG='nuxt:*' npm run dev
