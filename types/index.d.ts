@@ -5,7 +5,7 @@ export type Response = {
 };
 
 export type UserDataProps = {
-  username: string;
+  name: string;
   password: string;
   email: string;
 };

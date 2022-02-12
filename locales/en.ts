@@ -15,7 +15,7 @@ export default {
         title: 'Sign Up',
         ok: 'Create account',
         repeatPassword: 'Repeat password',
-        username: 'Name',
+        name: 'Name',
       },
       signOut: {
         title: 'Sign Out',
@@ -36,7 +36,7 @@ export default {
         length: '{name} be at least {count} characters',
         notEqual: '{name} is not equal',
         required: 'Required field',
-        username: 'Name must be at least {count} characters',
+        name: 'Name must be at least {count} characters',
       },
 
       message: {

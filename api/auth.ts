@@ -6,19 +6,19 @@ import type { Response, UserDataProps } from '../types';
 
 config();
 
-const jwtKey = process.env.JWT_KEY as string ?? 'secret';
+const jwtKey = (process.env.JWT_KEY as string) ?? 'secret';
 
 interface IAuthResponse extends Response {
   accessToken?: string;
   id?: number;
 }
 
-async function register({ username, password, email }: UserDataProps): Promise<IAuthResponse> {
+async function register({ name, password, email }: UserDataProps): Promise<IAuthResponse> {
   try {
     const [userData] = (await knex('users')
-      .returning(['id', 'username'])
+      .returning(['id', 'name'])
       .insert({
-        username,
+        name,
         email,
         password_digest: value2Hash(password),
       })) as any;
@@ -41,7 +41,7 @@ async function login(props: { email: string; password: string }): Promise<IAuthR
   try {
     const { email, password } = props;
     const [userData] = await knex('users')
-      .select(['id', 'username'])
+      .select(['id', 'name'])
       .where({ email, password_digest: value2Hash(password) });
     return { isSuccess: true, accessToken: sign(userData, jwtKey) };
   } catch (err) {

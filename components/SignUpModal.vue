@@ -13,18 +13,18 @@
                 v-if="!isCorrectUsername() && !queryState.isSuccess"
                 class="has-text-danger-dark"
               >
-                {{ $t('user.auth.error.username', { count: 3 }) }}
+                {{ $t('user.auth.error.name', { count: 3 }) }}
               </span>
               <span v-else>
-                {{ $t('user.auth.signUp.username') }}
+                {{ $t('user.auth.signUp.name') }}
               </span>
             </template>
             <b-input
-              ref="username"
+              ref="name"
               type="text"
-              :value="username"
-              :placeholder="$t('user.auth.signUp.username')"
-              @input="(value) => typing('username', value)"
+              :value="name"
+              :placeholder="$t('user.auth.signUp.name')"
+              @input="(value) => typing('name', value)"
             >
             </b-input>
           </b-field>
@@ -126,7 +126,7 @@ export default {
         message: '',
       },
 
-      username: '',
+      name: '',
       email: '',
       password: '',
       repeatPassword: '',
@@ -146,7 +146,7 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.$refs.username.focus();
+      this.$refs.name.focus();
     });
   },
   methods: {
@@ -160,7 +160,7 @@ export default {
       return this.password === this.repeatPassword;
     },
     isCorrectUsername() {
-      return this.username.length >= 3;
+      return this.name.length >= 3;
     },
     canSendData() {
       return (
@@ -186,7 +186,7 @@ export default {
               name: this.$t('user.auth.signUp.title'),
             }),
           } = await this.$store.dispatch('auth/register', {
-            username: this.username,
+            name: this.name,
             password: this.password,
             email: this.email,
           });

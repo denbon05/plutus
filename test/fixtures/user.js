@@ -1,6 +1,6 @@
 export default {
   new: {
-    username: 'luka',
+    name: 'luka',
     password: 'supersecret',
     email: 'luka@g.com',
   },

@@ -49,9 +49,9 @@ export const actions = {
     await dispatch('fetchUserData');
     return res;
   },
-  async register({ commit, dispatch }, { username, password, email }) {
+  async register({ commit, dispatch }, { name, password, email }) {
     const res = await this.$api('auth', 'register', {
-      username,
+      name,
       password,
       email,
     });
@@ -62,7 +62,7 @@ export const actions = {
   },
   async fetchUserData({ commit }) {
     const {
-      data: { username: name },
+      data: { name },
     } = await this.$api('auth', 'fetchUserData');
 
     commit('setUser', { name });
