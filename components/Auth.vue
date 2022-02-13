@@ -39,15 +39,6 @@ export default {
     logOut() {
       this.$store.commit('auth/logOut');
     },
-    imageModal() {
-      const h = this.$createElement;
-      const vnode = h('p', { class: 'image is-4by3' }, [
-        h('img', { attrs: { src: 'https://buefy.org/static/img/placeholder-1280x960.png' } }),
-      ]);
-      this.$buefy.modal.open({
-        content: [vnode],
-      });
-    },
     openSignUpModal() {
       this.$buefy.modal.open({
         parent: this,

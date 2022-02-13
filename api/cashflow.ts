@@ -1,17 +1,11 @@
-import knex from '../db/knex.js';
-import { getErrorMessage } from '../utils';
-import { Response } from '../types';
+// import knex from '../db/knex.js';
+// import { getErrorMessage } from '../utils';
+import type { Response, Props } from '../types';
 
-async function getCurrencies() {
-  const response: Response = { isSuccess: true };
-  try {
-    response.data = await knex.select().from('currencies');
-  } catch (err) {
-    response.message = getErrorMessage(err);
-    response.isSuccess = false;
-  }
+async function create(props: Props): Promise<Response> {
+  console.log('create props=>', props);
 
-  return response;
+  return await Promise.resolve({ isSuccess: false });
 }
 
-export { getCurrencies };
+export { create };

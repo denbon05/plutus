@@ -1,58 +1,57 @@
 export default {
   date: {
     month: {
-      select: 'Choose a month',
+      select: 'Выберите месяц',
     },
   },
 
   user: {
     auth: {
       logIn: {
-        title: 'Log In',
-        ok: 'Sign In',
+        title: 'Авторизоваться',
+        ok: 'Войти',
       },
       signUp: {
-        title: 'Sign Up',
-        ok: 'Create account',
-        repeatPassword: 'Repeat password',
-        name: 'Name',
+        title: 'Создать профиль',
+        ok: 'Зарегистрироваться',
+        repeatPassword: 'Повторите пароль',
+        name: 'Имя',
       },
       signOut: {
-        title: 'Sign Out',
+        title: 'Выход',
       },
       common: {
-        email: 'Email',
-        password: 'Password',
-        cancel: 'Cancel',
-        close: 'Close',
+        email: 'e-mail',
+        password: 'Пароль',
+        cancel: 'Отмена',
+        close: 'Закрыть',
         placeholder: {
-          password: 'Your password',
-          email: 'Your email',
+          password: 'Пароль',
+          email: 'Адрес электронной почты',
         },
       },
 
       error: {
-        format: 'Must be in {name} format',
-        length: '{name} be at least {count} characters',
-        notEqual: '{name} is not equal',
-        required: 'Required field',
-        name: 'Name must be at least {count} characters',
+        format: 'Должен быть в формате {name}',
+        length: 'Длина {name} минимум {count} символов',
+        notEqual: '{name} не одинаковый',
+        required: 'Обязательное поле',
       },
 
       message: {
-        success: '{name} successed',
+        success: 'Удачно получилось {name}',
       },
     },
   },
 
   cashFlow: {
-    title: 'Мой денежный поток',
+    title: 'Денежный поток',
     income: 'Доход',
     monthly: 'Ежемесячно',
     costs: 'Расходы',
-    limits: 'Пределы',
-    save: 'Сохранять',
-    close: 'Закрывать',
+    limits: 'Лимиты',
+    save: 'Сохранить',
+    close: 'Закрыть',
     defaultValue: {
       mortgage: 'Ипотека',
       creditCard: 'Кредитная карта',
@@ -63,10 +62,16 @@ export default {
     },
   },
 
+  alt: {
+    luckyCoin: 'Счастливая монета значок',
+    scroogeIcon: 'Иконка Скруджа Макдака',
+  },
+
   error: {
-    server: 'Server error',
+    server: 'Ошибка сервера',
+    maxLength: 'Максимальная позволенная длина {count} символов',
     action: {
-      retry: 'Do my best',
+      retry: 'Делаю все что в моих силах',
     },
   },
 };

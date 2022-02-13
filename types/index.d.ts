@@ -4,8 +4,15 @@ export type Response = {
   data?: any;
 };
 
-export type UserDataProps = {
-  name: string;
+export type Props = {
+  user: {
+    id: number;
+    name?: string;
+  };
+};
+
+export type AuthProps = {
+  name?: string;
   password: string;
   email: string;
 };

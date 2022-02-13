@@ -13,7 +13,7 @@
                 v-if="!isCorrectUsername() && !queryState.isSuccess"
                 class="has-text-danger-dark"
               >
-                {{ $t('user.auth.error.name', { count: 3 }) }}
+                {{ $t('user.auth.error.length', { name: $t('user.auth.signUp.name'), count: 3 }) }}
               </span>
               <span v-else>
                 {{ $t('user.auth.signUp.name') }}
@@ -198,6 +198,8 @@ export default {
           };
           this.$emit('close');
         } catch (err) {
+          console.error(err);
+          this.$rollbar.debug(err);
           this.queryState = { isSuccess: false, message: err.message, isLoading: false };
         }
       } else {

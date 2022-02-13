@@ -119,6 +119,8 @@ export default {
           };
           this.$emit('close');
         } catch (err) {
+          console.error(err);
+          this.$rollbar.debug(err);
           this.queryState = { isSuccess: false, message: err.message, isLoading: false };
         }
       } else {

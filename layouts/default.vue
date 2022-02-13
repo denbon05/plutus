@@ -81,12 +81,11 @@ export default {
     },
     showToast({ message = this.queryState.message, type = 'is-danger' }) {
       this.$buefy.toast.open({
-        duration: 7000,
+        duration: type === 'is-success' ? 2500 : 7000,
         message,
         position: 'is-top',
         type,
         'pause-on-hover': true,
-        queue: false,
       });
     },
   },

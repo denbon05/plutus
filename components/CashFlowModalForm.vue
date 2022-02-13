@@ -7,11 +7,11 @@
       >
         <img
           class="nav-icon"
-          src="~/assets/personal-scrooge-mcduck-scrooge-mcduck-hat-png-transparent.png"
-          :alt="$t('alt.moneyboxPig')"
+          src="~/assets/personal-scrooge-mcduck-scrooge-mcduck-hat-png-transparent.svg"
+          :alt="$t('alt.scroogeIcon')"
         />
         <span id="cashflowModalTitle">{{ $t('cashFlow.title') }}</span>
-        <b>{{ income }}</b>
+        <b>{{ cashflow }}</b>
         <b-select
           v-model="currencyData"
           :loading="queryState.isLoading"
@@ -47,10 +47,10 @@
       <section id="income" class="is-flex">
         <b-field :label="$t('cashFlow.income')">
           <b-numberinput
+            v-model="income"
             controls-alignment="right"
             controls-position="compact"
             controls-rounded
-            :value="income"
             :exponential="1.5"
             :disabled="queryState.isLoading"
           ></b-numberinput>
@@ -70,8 +70,10 @@
             size="is-medium"
             close-type="is-warning"
             :disabled="queryState.isLoading"
+            :before-adding="beforeAdding"
             @add="formatCosts"
           >
+            >
           </b-taginput>
         </b-field>
       </section>
@@ -80,24 +82,23 @@
         <h1 class="title">{{ $t('cashFlow.limits') }}</h1>
         <section class="is-flex is-flex-wrap-wrap">
           <b-field
-            v-for="(costData, costIdx) in costs"
-            :key="costData.name"
+            v-for="(cost, costIdx) in costs"
+            :key="cost.name"
             class="limit-item"
-            :label="costData.name"
-            :label-for="costData.name"
+            :label="cost.name"
+            :label-for="cost.name"
             :disabled="queryState.isLoading"
           >
             <b-numberinput
-              :id="costData.name"
+              :id="cost.name"
               :ref="`cost_${costIdx}`"
+              v-model="costs[costIdx].limit"
               :data-idx="costIdx"
               controls-alignment="right"
               controls-position="compact"
               class="mx-2"
-              :value="costData.limit"
               :exponential="1.5"
               min="0"
-              @blur="countCashFlow"
             ></b-numberinput>
           </b-field>
         </section>
@@ -128,6 +129,7 @@ export default {
         message: '',
       },
 
+      cashflow: 0,
       income: 3000,
       currencies: _.values(currencyList.getAll('en_US')),
       currencyData: {},
@@ -149,9 +151,24 @@ export default {
         this.$emit('showToast', this.queryState.message);
       }
     },
+    income: {
+      handler() {
+        this.countCashFlow();
+      },
+      deep: true,
+      immediate: false,
+    },
+    costs: {
+      handler() {
+        this.countCashFlow();
+      },
+      deep: true,
+      immediate: false,
+    },
   },
   mounted() {
     this.currencyData = currencyList.get('PLN');
+    this.countCashFlow();
     window.addEventListener('resize', this.onResize);
     this.costs.forEach(this.addEventListenerFocusNextCostInput);
   },
@@ -159,8 +176,14 @@ export default {
     window.removeEventListener('resize', this.onResize);
   },
   methods: {
-    countCashFlow(e) {
-      console.log('countCashFlow e=>', e);
+    beforeAdding(tag) {
+      const validTag = tag.length < 15;
+      if (!validTag)
+        this.$emit('showToast', { message: this.$t('error.maxLength', { count: 15 }) });
+      return validTag;
+    },
+    countCashFlow() {
+      this.cashflow = this.income - _.sumBy(this.costs, 'limit');
     },
     addEventListenerFocusNextCostInput({ name }) {
       document.getElementById(name).addEventListener('keypress', (e) => {
@@ -178,7 +201,15 @@ export default {
       this.screen = { width: window.innerWidth, height: window.innerHeight };
     },
     sendData() {
+      const { cashflow, income, currencyData: currency, monthAndYear: forDate, costs } = this;
       console.log('this=>', this);
+      console.log('sendedData=>', {
+        cashflow,
+        income,
+        currency,
+        monthAndYear: forDate,
+        costs,
+      });
     },
     formatCosts(value) {
       const costIdx = this.costs.length - 1;
@@ -188,7 +219,7 @@ export default {
         limit: 0,
       };
       this.costs = _.uniqBy(this.costs, 'name');
-      this.addEventListenerFocusNextCostInput({ name: capitalizedName });
+      setTimeout(() => this.addEventListenerFocusNextCostInput({ name: capitalizedName }), 0);
     },
   },
 };

@@ -1,4 +1,5 @@
 import last from 'lodash/last';
+import { decode } from 'jsonwebtoken';
 
 export default async (req, res, _next) => {
   let url = req._parsedUrl.pathname.replace(/^\/+|\/+$|\.+/g, '');
@@ -6,8 +7,8 @@ export default async (req, res, _next) => {
   const method = url.pop();
   const controller = url.slice(1).join('/');
   const api = require(`../api/${controller}.ts`);
-  if (method === 'fetchUserData' && req.headers.authorization) {
-    req.params.token = last(req.headers.authorization.split(' '));
+  if (req.headers.authorization) {
+    req.params.user = decode(last(req.headers.authorization.split(' ')));
   }
   const result = await api[method](req.params);
 

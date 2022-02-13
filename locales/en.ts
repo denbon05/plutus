@@ -69,11 +69,12 @@ export default {
 
   alt: {
     luckyCoin: 'Lucky coin icon',
-    moneyboxPig: 'Moneybox pig icon',
+    scroogeIcon: 'Scrooge Mcduck icon',
   },
 
   error: {
     server: 'Server error',
+    maxLength: 'Max length allowed {count} characters',
     action: {
       retry: 'Do my best',
     },

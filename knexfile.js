@@ -2,8 +2,10 @@
 
 const path = require('path');
 const dotenv = require('dotenv');
+const { allKeysToCamelcase } = require('./utils');
 
 dotenv.config();
+
 const defaultOptions = {
   useNullAsDefault: true,
   migrations: {
@@ -12,6 +14,8 @@ const defaultOptions = {
   seeds: {
     directory: path.join(__dirname, 'db', 'seeds'),
   },
+  // @ts-ignore
+  postProcessResponse: (result) => allKeysToCamelcase(result),
 };
 
 module.exports = {

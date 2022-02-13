@@ -2,12 +2,9 @@ import userData from './fixtures/user';
 import { prepareDB, rollBackDb } from './helpers';
 import { register, login } from '@/api/auth';
 
-describe('auth proccess', () => {
-  let knex;
-
+describe('auth proccess api', () => {
   beforeAll(async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    knex = await prepareDB();
+    await prepareDB();
   });
 
   beforeEach(async () => {

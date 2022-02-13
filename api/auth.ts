@@ -1,8 +1,8 @@
-import { decode, sign } from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 import { config } from 'dotenv';
 import knex from '../db/knex.js';
 import { value2Hash, getErrorMessage } from '../utils';
-import type { Response, UserDataProps } from '../types';
+import type { Response, AuthProps, Props } from '../types';
 
 config();
 
@@ -13,7 +13,7 @@ interface IAuthResponse extends Response {
   id?: number;
 }
 
-async function register({ name, password, email }: UserDataProps): Promise<IAuthResponse> {
+async function register({ name, password, email }: AuthProps): Promise<IAuthResponse> {
   try {
     const [userData] = (await knex('users')
       .returning(['id', 'name'])
@@ -29,10 +29,9 @@ async function register({ name, password, email }: UserDataProps): Promise<IAuth
   }
 }
 
-async function fetchUserData({ token }: { token: string }): Promise<IAuthResponse> {
+async function fetchUserData({ user: { id } }: Props): Promise<IAuthResponse> {
   try {
-    const decoded = decode(token) as any;
-    const [userData] = await knex('users').select('name').where('id', decoded.id);
+    const [userData] = await knex('users').select('name').where('id', id);
     return { data: userData, isSuccess: true };
   } catch (err) {
     console.log('fetchUserData err:', err);
@@ -40,7 +39,7 @@ async function fetchUserData({ token }: { token: string }): Promise<IAuthRespons
   }
 }
 
-async function login(props: { email: string; password: string }): Promise<IAuthResponse> {
+async function login(props: AuthProps): Promise<IAuthResponse> {
   try {
     const { email, password } = props;
     const [userData] = await knex('users')
