@@ -1,6 +1,6 @@
 export default function ({ store, app: { $axios }, redirect }) {
   $axios.onRequest((config) => {
-    console.log('axios onRequest store=>', store);
+    // console.log('axios onRequest store=>', store);
     // check if the user is authenticated
     if (store.state.auth.accessToken) {
       // set the Authorization header using the access token

@@ -35,9 +35,6 @@ export default {
       return this.$store.state.auth.user.isGuest();
     },
   },
-  mounted() {
-    console.log('!!!!=>', this.userIsGuest, this.userName);
-  },
   methods: {
     logOut() {
       this.$store.commit('auth/logOut');

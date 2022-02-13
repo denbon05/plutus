@@ -1,5 +1,8 @@
 # <a href='https://plutus.vercel.app/' target='_blank'>plutus</a>
 
+[![Test Coverage](https://api.codeclimate.com/v1/badges/7733ce8a63e98e6aee2f/test_coverage)](https://codeclimate.com/github/denbon05/plutus/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/7733ce8a63e98e6aee2f/maintainability)](https://codeclimate.com/github/denbon05/plutus/maintainability)
+
 ## Build Setup
 
 ```bash
