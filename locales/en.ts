@@ -75,6 +75,7 @@ export default {
   error: {
     server: 'Server error',
     maxLength: 'Max length allowed {count} characters',
+    uniqEmail: 'User is already exist with this email',
     action: {
       retry: 'Do my best',
     },

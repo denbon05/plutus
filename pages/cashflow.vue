@@ -1,11 +1,9 @@
 <template>
-  <section>
-    <cash-flow-form />
-  </section>
+  <cash-flow-form />
 </template>
 
 <script>
-import cashFlowForm from '~/components/cashflow-form.vue';
+import cashFlowForm from '~/components/cashflow/cashflow-form.vue';
 
 export default {
   components: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-card" style="width: auto">
+  <div class="hero">
     <header id="modal-header-container" class="modal-card-head">
       <div
         id="modal-header"
@@ -107,15 +107,17 @@
       </section>
     </section>
     <footer class="modal-card-foot">
-      <nuxt-link to="/">
-        <b-button :label="$t('cashFlow.close')" />
-      </nuxt-link>
-      <b-button
-        :label="$t('cashFlow.save')"
-        type="is-primary"
-        :disabled="!queryState.isSuccess || queryState.isLoading"
-        @click="sendData"
-      />
+      <section style="gap: 10px">
+        <nuxt-link to="/">
+          <b-button :label="$t('cashFlow.close')" />
+        </nuxt-link>
+        <b-button
+          :label="$t('cashFlow.save')"
+          type="is-primary"
+          :disabled="!queryState.isSuccess || queryState.isLoading"
+          @click="sendData"
+        />
+      </section>
     </footer>
   </div>
 </template>
@@ -124,7 +126,7 @@
 import currencyList from 'currency-list';
 
 export default {
-  inject: ['showToast'],
+  inject: ['showToast', 'logError'],
   data() {
     return {
       screen: { width: window.innerWidth, height: window.innerHeight },
@@ -206,9 +208,8 @@ export default {
     onResize() {
       this.screen = { width: window.innerWidth, height: window.innerHeight };
     },
-    sendData() {
+    async sendData() {
       const { cashflow, income, currencyData: currency, monthAndYear: forDate, costs } = this;
-      console.log('this=>', this);
       console.log('sendedData=>', {
         cashflow,
         income,
@@ -216,6 +217,21 @@ export default {
         monthAndYear: forDate,
         costs,
       });
+      try {
+        const { isSuccess, message = '' } = await this.$api('budget', 'createCashflow', {
+          cashflow,
+          income,
+          currency,
+          monthAndYear: forDate,
+          costs,
+        });
+        console.log('res=>', { isSuccess, message });
+        this.queryState = { isSuccess, message, isLoading: false };
+        // if (isSuccess) this.$router.push('/');
+      } catch (err) {
+        this.logError(err);
+        this.queryState = { isSuccess: false, message: err.message, isLoading: false };
+      }
     },
     formatCosts(value) {
       const costIdx = this.costs.length - 1;
@@ -233,6 +249,11 @@ export default {
 
 <style lang="scss">
 @import '~/assets/css/_variables';
+
+.hero {
+  height: 100vh;
+  min-height: fit-content;
+}
 
 #modal-header-container {
   padding: 7px 10px;

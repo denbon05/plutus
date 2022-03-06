@@ -16,3 +16,11 @@ export type AuthProps = {
   password: string;
   email: string;
 };
+
+export interface ICashflowProp extends Props {
+  cashflow: number;
+  income: number;
+  currency: any;
+  monthAndYear: string;
+  costs: { name: string; limit: number }[];
+}

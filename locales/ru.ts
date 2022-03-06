@@ -70,6 +70,7 @@ export default {
   error: {
     server: 'Ошибка сервера',
     maxLength: 'Максимальная позволенная длина {count} символов',
+    uniqEmail: 'Пользователь уже существует с таким e-mail',
     action: {
       retry: 'Делаю все что в моих силах',
     },

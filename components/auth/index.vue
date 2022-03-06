@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import signUpModal from '~/components/signup-dialog.vue';
-import logInModal from '~/components/login-dialog.vue';
+import signUpModal from '~/components/auth/signup-dialog.vue';
+import logInModal from '~/components/auth/login-dialog.vue';
 
 export default {
   data() {

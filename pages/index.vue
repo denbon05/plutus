@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import budgetTable from '~/components/budget-table.vue';
+import budgetTable from '~/components/budget/';
 
 export default {
   components: {

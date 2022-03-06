@@ -1,10 +1,20 @@
-// @ts-check
-
 const path = require('path');
 const dotenv = require('dotenv');
-const { allKeysToCamelcase } = require('./utils');
+const { isArray, isObject, keys, camelCase } = require('lodash');
 
 dotenv.config();
+
+const allKeysToCamelcase = (item) => {
+  if (isArray(item)) return item.map((n) => (isObject(n) ? allKeysToCamelcase(n) : n));
+  if (isObject(item))
+    return keys(item).reduce((acc, key) => {
+      const value = item[key];
+      return {
+        ...acc,
+        [camelCase(key)]: isObject(value) ? allKeysToCamelcase(value) : value,
+      };
+    }, {});
+};
 
 const defaultOptions = {
   useNullAsDefault: true,
@@ -14,7 +24,6 @@ const defaultOptions = {
   seeds: {
     directory: path.join(__dirname, 'db', 'seeds'),
   },
-  // @ts-ignore
   postProcessResponse: (result) => allKeysToCamelcase(result),
 };
 

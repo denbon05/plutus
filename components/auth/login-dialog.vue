@@ -61,7 +61,7 @@
 
 <script>
 export default {
-  inject: ['showToast'],
+  inject: ['showToast', 'logError'],
   props: {
     minPasswordLength: {
       type: Number,
@@ -99,7 +99,6 @@ export default {
   },
   methods: {
     async logIn() {
-      console.log('this=>', this);
       if (this.canSendData()) {
         this.queryState.isLoading = true;
         try {
@@ -120,8 +119,7 @@ export default {
           };
           this.$emit('close');
         } catch (err) {
-          console.error(err);
-          this.$rollbar.debug(err);
+          this.logError(err);
           this.queryState = { isSuccess: false, message: err.message, isLoading: false };
         }
       } else {

@@ -112,7 +112,7 @@
 
 <script>
 export default {
-  inject: ['showToast'],
+  inject: ['showToast', 'logError'],
   props: {
     minPasswordLength: {
       type: Number,
@@ -175,9 +175,14 @@ export default {
     typing(inputname, value) {
       this.$set(this, inputname, value);
     },
+    formatError(message) {
+      if (message.match(/unique\sconstraint.*email/gi)) {
+        return this.$t('error.uniqEmail');
+      }
+      return message;
+    },
 
     async signUp() {
-      console.log('this=>', this);
       if (this.canSendData()) {
         this.queryState.isLoading = true;
         try {
@@ -191,16 +196,14 @@ export default {
             password: this.password,
             email: this.email,
           });
-          console.log('register res =>', { isSuccess, message });
           this.queryState = {
             isSuccess,
-            message,
+            message: this.formatError(message),
             isLoading: false,
           };
           if (isSuccess) this.$emit('close');
         } catch (err) {
-          console.error(err);
-          this.$rollbar.debug(err);
+          this.logError(err);
           this.queryState = { isSuccess: false, message: err.message, isLoading: false };
         }
       } else {
