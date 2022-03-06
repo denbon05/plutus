@@ -1,12 +1,34 @@
 <template>
-  <section id="logInModal">
-    <form action="">
+  <section id="sginUpModal">
+    <form>
       <div class="modal-card" style="width: auto">
         <header class="modal-card-head">
-          <p class="modal-card-title">{{ $t('user.auth.logIn.title') }}</p>
+          <p class="modal-card-title">{{ $t('user.auth.signUp.title') }}</p>
           <button type="button" class="delete" @click="$emit('close')" />
         </header>
         <section class="modal-card-body">
+          <b-field :type="!queryState.isSuccess && !isCorrectUsername() ? 'is-danger' : null">
+            <template #label>
+              <span
+                v-if="!isCorrectUsername() && !queryState.isSuccess"
+                class="has-text-danger-dark"
+              >
+                {{ $t('user.auth.error.length', { name: $t('user.auth.signUp.name'), count: 3 }) }}
+              </span>
+              <span v-else>
+                {{ $t('user.auth.signUp.name') }}
+              </span>
+            </template>
+            <b-input
+              ref="name"
+              type="text"
+              :value="name"
+              :placeholder="$t('user.auth.signUp.name')"
+              @input="(value) => typing('name', value)"
+            >
+            </b-input>
+          </b-field>
+
           <b-field :type="!queryState.isSuccess && !isEmailFormat() ? 'is-danger' : null">
             <template #label>
               <span v-if="!isEmailFormat() && !queryState.isSuccess" class="has-text-danger-dark">
@@ -17,7 +39,6 @@
               </span>
             </template>
             <b-input
-              ref="email"
               :value="email"
               type="email"
               :placeholder="$t('user.auth.common.placeholder.email')"
@@ -49,10 +70,40 @@
             >
             </b-input>
           </b-field>
+
+          <b-field :type="!queryState.isSuccess && !passwordsAreEqual() ? 'is-danger' : null">
+            <template #label>
+              <span
+                v-if="!passwordsAreEqual() && !queryState.isSuccess"
+                class="has-text-danger-dark"
+              >
+                {{
+                  $t('user.auth.error.notEqual', {
+                    name: $t('user.auth.common.password'),
+                  })
+                }}
+              </span>
+              <span v-else>
+                {{ $t('user.auth.signUp.repeatPassword') }}
+              </span>
+            </template>
+            <b-input
+              type="password"
+              :value="repeatPassword"
+              password-reveal
+              @input="(value) => typing('repeatPassword', value)"
+            >
+            </b-input>
+          </b-field>
         </section>
         <footer class="modal-card-foot">
           <b-button :label="$t('user.auth.common.cancel')" @click="$emit('close')" />
-          <b-button :label="$t('user.auth.logIn.ok')" type="is-primary" @click="logIn" />
+          <b-button
+            :disabled="queryState.isLoading"
+            :label="$t('user.auth.signUp.ok')"
+            type="is-primary"
+            @click="signUp"
+          />
         </footer>
       </div>
     </form>
@@ -61,6 +112,7 @@
 
 <script>
 export default {
+  inject: ['showToast'],
   props: {
     minPasswordLength: {
       type: Number,
@@ -75,8 +127,10 @@ export default {
         message: '',
       },
 
+      name: '',
       email: '',
       password: '',
+      repeatPassword: '',
     };
   },
   watch: {
@@ -84,7 +138,7 @@ export default {
       handler() {
         const { isLoading, message, isSuccess } = this.queryState;
         if (!isLoading && message) {
-          this.$emit('showToast', { message, type: isSuccess ? 'is-success' : 'is-danger' });
+          this.showToast({ message, type: isSuccess ? 'is-success' : 'is-danger' });
         }
       },
       deep: true,
@@ -93,11 +147,36 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.$refs.email.focus();
+      this.$refs.name.focus();
     });
   },
   methods: {
-    async logIn() {
+    isEmailFormat() {
+      return this.email.match(/.+@.+\..+/i);
+    },
+    passwordIsAllowedLength() {
+      return this.password.length >= 8;
+    },
+    passwordsAreEqual() {
+      return this.password === this.repeatPassword;
+    },
+    isCorrectUsername() {
+      return this.name.length >= 3;
+    },
+    canSendData() {
+      return (
+        this.isEmailFormat() &&
+        this.passwordIsAllowedLength() &&
+        this.passwordsAreEqual() &&
+        this.isCorrectUsername()
+      );
+    },
+
+    typing(inputname, value) {
+      this.$set(this, inputname, value);
+    },
+
+    async signUp() {
       console.log('this=>', this);
       if (this.canSendData()) {
         this.queryState.isLoading = true;
@@ -105,19 +184,20 @@ export default {
           const {
             isSuccess,
             message = this.$t('user.auth.message.success', {
-              name: this.$t('user.auth.logIn.title'),
+              name: this.$t('user.auth.signUp.title'),
             }),
-          } = await this.$store.dispatch('auth/logIn', {
+          } = await this.$store.dispatch('auth/register', {
+            name: this.name,
             password: this.password,
             email: this.email,
           });
-          console.log('logIn res =>', { isSuccess, message });
+          console.log('register res =>', { isSuccess, message });
           this.queryState = {
             isSuccess,
             message,
             isLoading: false,
           };
-          this.$emit('close');
+          if (isSuccess) this.$emit('close');
         } catch (err) {
           console.error(err);
           this.$rollbar.debug(err);
@@ -127,18 +207,6 @@ export default {
         this.$set(this.queryState, 'isSuccess', false);
       }
     },
-    isEmailFormat() {
-      return this.email.match(/.+@.+\..+/i);
-    },
-    passwordIsAllowedLength() {
-      return this.password.length >= 8;
-    },
-    canSendData() {
-      return this.isEmailFormat() && this.passwordIsAllowedLength();
-    },
-    typing(inputname, value) {
-      this.$set(this, inputname, value);
-    },
   },
 };
 </script>
@@ -147,13 +215,13 @@ export default {
 @import '~/assets/css/_variables';
 
 @include from($tablet) {
-  #logInModal {
+  #sginUpModal {
     width: 600px;
   }
 }
 
 @include until($tablet) {
-  #logInModal {
+  #sginUpModal {
     width: 85%;
     min-width: 360px;
     margin: 0 auto;

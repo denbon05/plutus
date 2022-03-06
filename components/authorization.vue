@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import SignUpModal from '~/components/SignUpModal.vue';
-import LogInModal from '~/components/LogInModal.vue';
+import signUpModal from '~/components/signup-dialog.vue';
+import logInModal from '~/components/login-dialog.vue';
 
 export default {
   data() {
@@ -45,10 +45,9 @@ export default {
         props: {
           minPasswordLength: this.minPasswordLength,
         },
-        component: SignUpModal,
+        component: signUpModal,
         hasModalCard: true,
         trapFocus: true,
-        events: { showToast: (args = {}) => this.$emit('showToast', args) },
       });
     },
     openLogInModal() {
@@ -57,15 +56,9 @@ export default {
         props: {
           minPasswordLength: this.minPasswordLength,
         },
-        component: LogInModal,
+        component: logInModal,
         hasModalCard: true,
         trapFocus: true,
-        events: {
-          showToast: (args = {}) => {
-            console.log('auth showTOasts', args);
-            this.$emit('showToast', args);
-          },
-        },
       });
     },
   },

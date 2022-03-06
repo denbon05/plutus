@@ -41,7 +41,9 @@
           </div>
         </template>
       </div>
-      <button type="button" class="delete" @click="$parent.close()" />
+      <nuxt-link to="/">
+        <button type="button" class="delete" />
+      </nuxt-link>
     </header>
     <section id="grid-container" class="modal-card-body">
       <section id="income" class="is-flex">
@@ -105,7 +107,9 @@
       </section>
     </section>
     <footer class="modal-card-foot">
-      <b-button :label="$t('cashFlow.close')" @click="$parent.close()" />
+      <nuxt-link to="/">
+        <b-button :label="$t('cashFlow.close')" />
+      </nuxt-link>
       <b-button
         :label="$t('cashFlow.save')"
         type="is-primary"
@@ -120,6 +124,7 @@
 import currencyList from 'currency-list';
 
 export default {
+  inject: ['showToast'],
   data() {
     return {
       screen: { width: window.innerWidth, height: window.innerHeight },
@@ -148,7 +153,7 @@ export default {
   watch: {
     queryState() {
       if (this.queryState.message && !this.queryState.isSuccess) {
-        this.$emit('showToast', this.queryState.message);
+        this.showToast(this.queryState.message);
       }
     },
     income: {
@@ -178,8 +183,9 @@ export default {
   methods: {
     beforeAdding(tag) {
       const validTag = tag.length < 15;
-      if (!validTag)
-        this.$emit('showToast', { message: this.$t('error.maxLength', { count: 15 }) });
+      if (!validTag) {
+        this.showToast({ message: this.$t('error.maxLength', { count: 15 }) });
+      }
       return validTag;
     },
     countCashFlow() {

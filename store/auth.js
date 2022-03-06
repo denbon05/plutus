@@ -56,6 +56,7 @@ export const actions = {
       email,
     });
 
+    if (!res.isSuccess) return res;
     commit('setTokens', res);
     await dispatch('fetchUserData');
     return res;

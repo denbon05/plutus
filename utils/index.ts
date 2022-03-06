@@ -1,10 +1,14 @@
 import { createHash } from 'crypto';
-// eslint-disable-next-line import/named
 import { isArray, isObject, keys, camelCase } from 'lodash';
 
+const formatError = (error: string): string => {
+  if (error.match(/unique\sconstraint.*email/gi)) return 'User is already exist with this email';
+  return error;
+};
+
 export const getErrorMessage = (error: unknown): string => {
-  if (error instanceof Error) return error.message;
-  return String(error);
+  if (error instanceof Error) return formatError(error.message);
+  return formatError(String(error));
 };
 
 export const isCanStartUser = (): boolean => false;

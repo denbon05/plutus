@@ -12,5 +12,6 @@ module.exports = {
     semi: [2, 'always'],
     'vue/attribute-hyphenation': 'off',
     'vue/multi-word-component-names': 'off',
+    'import/named': 'off',
   },
 };
