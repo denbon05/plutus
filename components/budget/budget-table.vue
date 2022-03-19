@@ -147,6 +147,7 @@ export default {
       isLoading: false,
       hasMobileCards: true,
 
+      budgetData: null,
       queryBudgetState: {
         message: '',
         isLoading: false,
@@ -157,7 +158,7 @@ export default {
   async fetch() {
     if (!this.$store.state.auth.user.isGuest()) {
       await this.fetchBudgetData();
-      console.log('this=>', this);
+      console.log('table budgetData:', this.budgetData);
     }
   },
   computed: {
@@ -181,7 +182,10 @@ export default {
       this.queryBudgetState.isLoading = true;
       try {
         const { data, message, isSuccess } = await this.$api('budget', 'fetchBudget', { date });
-        this.budgetData = data;
+        if (data) {
+          this.budgetData = data;
+          this.$store.commit('budget/setCashflowId', data);
+        }
         this.queryBudgetState = { isLoading: false, message, isSuccess };
       } catch (err) {
         logError(err);

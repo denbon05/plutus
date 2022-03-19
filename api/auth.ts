@@ -2,16 +2,11 @@ import { sign } from 'jsonwebtoken';
 import { config } from 'dotenv';
 import knex from '../db/knex.js';
 import { value2Hash, getErrorMessage } from '../utils';
-import type { Response, AuthProps, Props } from '../types';
+import type { IAuthResponse, AuthProps, Props } from '../types';
 
 config();
 
 const jwtKey = (process.env.JWT_KEY as string) ?? 'secret';
-
-interface IAuthResponse extends Response {
-  accessToken?: string;
-  id?: number;
-}
 
 async function register({ name, password, email }: AuthProps): Promise<IAuthResponse> {
   try {

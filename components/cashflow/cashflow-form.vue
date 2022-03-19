@@ -11,7 +11,7 @@
           :alt="$t('alt.scroogeIcon')"
         />
         <span id="cashflowModalTitle">{{ $t('cashFlow.title') }}</span>
-        <b>{{ cashflow }}</b>
+        <b>{{ profit }}</b>
         <b-select
           v-model="currencyData"
           :loading="queryState.isLoading"
@@ -96,10 +96,8 @@
               :ref="`cost_${costIdx}`"
               v-model="costs[costIdx].limit"
               :data-idx="costIdx"
-              controls-alignment="right"
-              controls-position="compact"
-              class="mx-2"
-              :exponential="1.5"
+              :controls="false"
+              class="mr-2"
               min="0"
             ></b-numberinput>
           </b-field>
@@ -114,7 +112,7 @@
         <b-button
           :label="$t('cashFlow.save')"
           type="is-primary"
-          :disabled="!queryState.isSuccess || queryState.isLoading"
+          :disabled="queryState.isLoading"
           @click="sendData"
         />
       </section>
@@ -136,7 +134,7 @@ export default {
         message: '',
       },
 
-      cashflow: 0,
+      profit: 0,
       income: 3000,
       currencies: _.values(currencyList.getAll('en_US')),
       currencyData: {},
@@ -154,8 +152,8 @@ export default {
   },
   watch: {
     queryState() {
-      if (this.queryState.message && !this.queryState.isSuccess) {
-        this.showToast(this.queryState.message);
+      if (!this.queryState.isSuccess) {
+        this.showToast(this.queryState);
       }
     },
     income: {
@@ -173,8 +171,13 @@ export default {
       immediate: false,
     },
   },
+  beforeMount() {
+    if (!this.$store.state.auth.user.isGuest()) {
+      this.fetchBudgetData();
+    }
+  },
   mounted() {
-    this.currencyData = currencyList.get('PLN');
+    this.currencyData = currencyList.get('PLN'); // todo depends on user location
     this.countCashFlow();
     window.addEventListener('resize', this.onResize);
     this.costs.forEach(this.addEventListenerFocusNextCostInput);
@@ -183,6 +186,24 @@ export default {
     window.removeEventListener('resize', this.onResize);
   },
   methods: {
+    formatCashflowData(data) {
+      const formatKeys = ['profit', 'income', 'costs'];
+      formatKeys.forEach((key) => this.$set(this, key, data[key]));
+    },
+    async fetchBudgetData(date = new Date()) {
+      this.queryState.isLoading = true;
+      try {
+        const { data, message, isSuccess } = await this.$api('budget', 'fetchBudget', { date });
+        console.log('fetchBudgetData data:', data);
+        if (data) {
+          this.formatCashflowData(data);
+        }
+        this.queryState = { isLoading: false, message, isSuccess };
+      } catch (err) {
+        logError(err);
+        this.queryState = { isLoading: false, message: err.message, isSuccess: false };
+      }
+    },
     beforeAdding(tag) {
       const validTag = tag.length < 15;
       if (!validTag) {
@@ -191,7 +212,7 @@ export default {
       return validTag;
     },
     countCashFlow() {
-      this.cashflow = this.income - _.sumBy(this.costs, 'limit');
+      this.profit = this.income - _.sumBy(this.costs, 'limit');
     },
     addEventListenerFocusNextCostInput({ name }) {
       document.getElementById(name).addEventListener('keypress', (e) => {
@@ -209,25 +230,21 @@ export default {
       this.screen = { width: window.innerWidth, height: window.innerHeight };
     },
     async sendData() {
-      const { cashflow, income, currencyData: currency, monthAndYear: forDate, costs } = this;
-      console.log('sendedData=>', {
-        cashflow,
-        income,
-        currency,
-        monthAndYear: forDate,
-        costs,
-      });
+      const { profit, income, currencyData: currency, monthAndYear: forDate, costs } = this;
+      const action = this.$store.getters['budget/isNewCashflow'] ? 'create' : 'update';
       try {
-        const { isSuccess, message = '' } = await this.$api('budget', 'createCashflow', {
-          cashflow,
+        const { isSuccess, message = '' } = await this.$api('budget', 'cashflow', {
+          profit,
           income,
           currency,
           monthAndYear: forDate,
           costs,
+          action,
+          cashflowId: this.$store.getters['budget/cashflowId'],
         });
-        console.log('res=>', { isSuccess, message });
+        console.log('sendData res:', { isSuccess, message });
         this.queryState = { isSuccess, message, isLoading: false };
-        // if (isSuccess) this.$router.push('/');
+        if (isSuccess) this.$router.push('/');
       } catch (err) {
         this.logError(err);
         this.queryState = { isSuccess: false, message: err.message, isLoading: false };
@@ -284,7 +301,7 @@ export default {
 
 #limits {
   .limit-item {
-    width: 160px;
+    width: 150px;
   }
 }
 

@@ -1,7 +1,7 @@
 exports.up = function (knex) {
   return knex.schema.createTable('cashflows', (table) => {
     table.increments('id').primary();
-    table.integer('cashflow').notNullable();
+    table.integer('profit').notNullable();
     table.integer('income').notNullable();
     table.specificType('currency', 'jsonb').notNullable();
     table.specificType('costs', 'jsonb[]').notNullable();

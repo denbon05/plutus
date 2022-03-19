@@ -16,6 +16,9 @@
     "lintfix": "npx prettier --write --list-different . && npm run lint:js -- --fix",
     "test": "jest"
   },
+  "pre-commit": [
+    "test"
+  ],
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/dotenv": "^1.4.1",
@@ -56,6 +59,7 @@
     "eslint-plugin-nuxt": "^3.1.0",
     "eslint-plugin-vue": "^8.2.0",
     "jest": "^27.4.4",
+    "pre-commit": "^1.2.2",
     "prettier": "^2.5.1",
     "sass": "^1.47.0",
     "sass-loader": "^10.2.0",

@@ -5,7 +5,9 @@ const { Guest, User } = models;
 export const state = () => ({
   accessToken: null,
   refreshToken: null,
-  user: new Guest(),
+  user: localStorage.getItem('user')
+    ? new User(JSON.parse(localStorage.getItem('user')))
+    : new Guest(),
 });
 
 export const getters = {

@@ -111,7 +111,6 @@ export default {
             password: this.password,
             email: this.email,
           });
-          console.log('logIn res =>', { isSuccess, message });
           this.queryState = {
             isSuccess,
             message,

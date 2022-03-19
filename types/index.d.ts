@@ -4,6 +4,11 @@ export type Response = {
   data?: any;
 };
 
+export interface IAuthResponse extends Response {
+  accessToken?: string;
+  id?: number;
+}
+
 export type Props = {
   user: {
     id: number;
@@ -18,9 +23,11 @@ export type AuthProps = {
 };
 
 export interface ICashflowProp extends Props {
-  cashflow: number;
+  action: 'create' | 'update' | 'delete';
+  profit: number;
   income: number;
   currency: any;
   monthAndYear: string;
   costs: { name: string; limit: number }[];
+  cashflowId?: number;
 }

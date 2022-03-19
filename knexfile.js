@@ -40,6 +40,7 @@ module.exports = {
     client: 'sqlite3',
     connection: ':memory:',
     ...defaultOptions,
+    // debug: process.env.IS_LOCAL_ENV,
   },
 
   production: {

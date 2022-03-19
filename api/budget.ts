@@ -2,37 +2,56 @@ import knex from '../db/knex.js';
 import { getErrorMessage } from '../utils';
 import type { Response, ICashflowProp, Props } from '../types';
 
-async function createCashflow(props: ICashflowProp): Promise<Response> {
+async function cashflow(props: ICashflowProp): Promise<Response> {
   const {
-    cashflow,
+    action,
+    profit,
     income,
     currency,
     monthAndYear,
     costs,
     user: { id: userId },
+    cashflowId,
   } = props;
   try {
-    await knex.transaction(async (trx) => {
-      const [cashflowId] = (await trx('cashflows')
-        .returning('id')
-        .insert({
-          cashflow,
-          income,
-          currency: JSON.stringify(currency),
-          costs: JSON.stringify(costs),
-          for_date: monthAndYear,
-        })) as any;
-      console.log('cashflowId=>', cashflowId);
-      await trx('user_cashflow').insert({ user_id: userId, cashflow_id: cashflowId });
-    });
+    switch (action) {
+      case 'create':
+        await knex.transaction(async (trx) => {
+          const [cashflowId] = (await trx('cashflows')
+            .returning('id')
+            .insert({
+              profit,
+              income,
+              currency: JSON.stringify(currency),
+              costs: JSON.stringify(costs),
+              for_date: monthAndYear,
+            })) as any;
+          await trx('user_cashflow').insert({ user_id: userId, cashflow_id: cashflowId });
+        });
+        break;
+      case 'update':
+        await knex('cashflows')
+          .where({ id: cashflowId })
+          .update({
+            profit,
+            income,
+            currency: JSON.stringify(currency),
+            costs: JSON.stringify(costs),
+            for_date: monthAndYear,
+          });
+        break;
+      default:
+        throw new Error(`Action '${action}' is not allowed`);
+    }
+    return { isSuccess: true };
   } catch (err) {
     console.error(err);
     return { isSuccess: false, message: getErrorMessage(err) };
   }
-  return await Promise.resolve({ isSuccess: false });
 }
 
 async function fetchBudget({ user: { id } }: Props): Promise<Response> {
+  console.log('fetchBudget', { id });
   try {
     const [budgetData] = await knex.raw(`
       SELECT
@@ -45,6 +64,7 @@ async function fetchBudget({ user: { id } }: Props): Promise<Response> {
       WHERE
         uc.user_id = ${id};
     `);
+    if (!budgetData) return { isSuccess: true, data: null };
     return {
       isSuccess: true,
       data: {
@@ -59,4 +79,4 @@ async function fetchBudget({ user: { id } }: Props): Promise<Response> {
   }
 }
 
-export { createCashflow, fetchBudget };
+export { cashflow, fetchBudget };
